@@ -13,6 +13,7 @@ import {
   Filter,
   GraduationCap
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useStudents } from "@/hooks/useStudents";
@@ -38,6 +39,7 @@ const formatDate = (dateString: string) => {
 };
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const stats = useDashboardStats();
   const { students, loading: studentsLoading } = useStudents();
   const { activities, loading: activitiesLoading } = useActivities();
@@ -123,7 +125,7 @@ const Dashboard = () => {
               title="Welcome to Your Studio"
               description="Ready to begin your journey? Start by adding your first student to bring your conservatory to life."
               actionLabel="Add First Student"
-              onAction={() => console.log('Add student')}
+              onAction={() => navigate('/enroll')}
               icon={<GraduationCap className="h-12 w-12 text-primary" />}
             />
           </div>
@@ -211,7 +213,7 @@ const Dashboard = () => {
                   <CardTitle>Student Management</CardTitle>
                   <CardDescription>Recent enrollments and student status</CardDescription>
                 </div>
-                <Button variant="elegant" size="sm">
+                <Button variant="elegant" size="sm" onClick={() => navigate('/enroll')}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Student
                 </Button>
@@ -325,7 +327,7 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Button variant="professional" className="h-16 flex-col gap-2">
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/enroll')}>
                 <Plus className="h-5 w-5" />
                 <span className="text-xs">New Student</span>
               </Button>
