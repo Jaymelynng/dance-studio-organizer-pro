@@ -10,93 +10,38 @@ import {
   Calendar,
   Plus,
   Search,
-  Filter
+  Filter,
+  GraduationCap
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { useStudents } from "@/hooks/useStudents";
+import { useActivities } from "@/hooks/useActivities";
+import { EmptyState } from "@/components/EmptyState";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface DashboardStats {
-  totalStudents: number;
-  activeContracts: number;
-  pendingPayments: number;
-  revenue: number;
-}
-
-interface Student {
-  id: string;
-  name: string;
-  division: "Professional" | "Pre-Professional" | "Supplemental";
-  status: "Active" | "Pending" | "Inactive";
-  parentName: string;
-  monthlyTuition: number;
-}
-
-interface RecentActivity {
-  id: string;
-  type: "enrollment" | "payment" | "contract";
-  description: string;
-  timestamp: string;
-  status: "success" | "pending" | "warning";
-}
-
-const mockStats: DashboardStats = {
-  totalStudents: 47,
-  activeContracts: 42,
-  pendingPayments: 8,
-  revenue: 12500
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
 };
 
-const mockStudents: Student[] = [
-  {
-    id: "1",
-    name: "Emma Beaumont",
-    division: "Professional",
-    status: "Active",
-    parentName: "Sarah Beaumont",
-    monthlyTuition: 450
-  },
-  {
-    id: "2",
-    name: "Sophie Chen",
-    division: "Pre-Professional",
-    status: "Active",
-    parentName: "Michael Chen",
-    monthlyTuition: 320
-  },
-  {
-    id: "3",
-    name: "Isabella Rodriguez",
-    division: "Supplemental",
-    status: "Pending",
-    parentName: "Maria Rodriguez",
-    monthlyTuition: 180
-  }
-];
-
-const mockActivities: RecentActivity[] = [
-  {
-    id: "1",
-    type: "enrollment",
-    description: "New student Emma Beaumont enrolled in Professional Division",
-    timestamp: "2 hours ago",
-    status: "success"
-  },
-  {
-    id: "2",
-    type: "payment",
-    description: "Payment received from Sarah Beaumont - $450",
-    timestamp: "1 day ago",
-    status: "success"
-  },
-  {
-    id: "3",
-    type: "contract",
-    description: "Contract pending signature from Maria Rodriguez",
-    timestamp: "2 days ago",
-    status: "pending"
-  }
-];
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
 
 const Dashboard = () => {
+  const stats = useDashboardStats();
+  const { students, loading: studentsLoading } = useStudents();
+  const { activities, loading: activitiesLoading } = useActivities();
+
   const getDivisionColor = (division: string) => {
     switch (division) {
       case "Professional":
@@ -123,18 +68,69 @@ const Dashboard = () => {
     }
   };
 
-  const getActivityStatusColor = (status: string) => {
-    switch (status) {
-      case "success":
-        return "status-active";
-      case "pending":
-        return "status-pending";
-      case "warning":
-        return "bg-warning text-warning-foreground";
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case "enrollment":
+        return <UserCheck className="h-4 w-4 text-success" />;
+      case "payment":
+        return <DollarSign className="h-4 w-4 text-success" />;
+      case "contract":
+        return <FileText className="h-4 w-4 text-warning" />;
       default:
-        return "bg-muted";
+        return <FileText className="h-4 w-4 text-muted-foreground" />;
     }
   };
+
+  if (stats.loading) {
+    return (
+      <div className="min-h-screen bg-gradient-hero">
+        <div className="container mx-auto p-6 space-y-8">
+          <div className="text-center space-y-4 py-8">
+            <h1 className="text-4xl font-bold text-white mb-2">
+              Dégagé Classical Conservatory
+            </h1>
+            <p className="text-white/90 text-lg">Management Dashboard</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <Card key={i} className="shadow-card">
+                <CardContent className="p-6">
+                  <Skeleton className="h-8 w-16 mb-2" />
+                  <Skeleton className="h-4 w-24" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state for new studio
+  if (stats.totalStudents === 0 && !stats.loading) {
+    return (
+      <div className="min-h-screen bg-gradient-hero">
+        <div className="container mx-auto p-6 space-y-8">
+          <div className="text-center space-y-4 py-8">
+            <h1 className="text-4xl font-bold text-white mb-2 animate-float">
+              Dégagé Classical Conservatory
+            </h1>
+            <p className="text-white/90 text-lg">Management Dashboard</p>
+          </div>
+          
+          <div className="max-w-2xl mx-auto">
+            <EmptyState
+              title="Welcome to Your Studio"
+              description="Ready to begin your journey? Start by adding your first student to bring your conservatory to life."
+              actionLabel="Add First Student"
+              onAction={() => console.log('Add student')}
+              icon={<GraduationCap className="h-12 w-12 text-primary" />}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -157,10 +153,9 @@ const Dashboard = () => {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-primary">{mockStats.totalStudents}</div>
+              <div className="text-2xl font-bold text-primary">{stats.totalStudents}</div>
               <p className="text-xs text-muted-foreground">
-                <TrendingUp className="inline h-3 w-3 mr-1" />
-                +12% from last month
+                Active enrollment
               </p>
             </CardContent>
           </Card>
@@ -171,9 +166,9 @@ const Dashboard = () => {
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-primary">{mockStats.activeContracts}</div>
+              <div className="text-2xl font-bold text-primary">{stats.activeContracts}</div>
               <p className="text-xs text-muted-foreground">
-                {mockStats.activeContracts}/{mockStats.totalStudents} signed
+                {stats.activeContracts}/{stats.totalStudents} signed
               </p>
             </CardContent>
           </Card>
@@ -184,9 +179,9 @@ const Dashboard = () => {
               <DollarSign className="h-4 w-4 text-warning" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-warning">{mockStats.pendingPayments}</div>
+              <div className="text-2xl font-bold text-warning">{stats.pendingPayments}</div>
               <p className="text-xs text-muted-foreground">
-                Requires follow-up
+                {stats.pendingPayments > 0 ? 'Requires follow-up' : 'All current'}
               </p>
             </CardContent>
           </Card>
@@ -198,10 +193,10 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-success">
-                ${mockStats.revenue.toLocaleString()}
+                {formatCurrency(stats.monthlyRevenue)}
               </div>
               <p className="text-xs text-muted-foreground">
-                +8% from last month
+                From active contracts
               </p>
             </CardContent>
           </Card>
@@ -232,28 +227,46 @@ const Dashboard = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {mockStudents.map((student) => (
-                <div key={student.id} className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-smooth">
-                  <div className="space-y-1">
-                    <p className="font-medium">{student.name}</p>
-                    <p className="text-sm text-muted-foreground">Parent: {student.parentName}</p>
+              {studentsLoading ? (
+                [...Array(3)].map((_, i) => (
+                  <div key={i} className="p-3 rounded-lg border">
+                    <Skeleton className="h-4 w-32 mb-2" />
+                    <Skeleton className="h-3 w-24 mb-2" />
                     <div className="flex gap-2">
-                      <Badge className={getDivisionColor(student.division)}>
-                        {student.division}
-                      </Badge>
-                      <Badge variant="outline" className={getStatusColor(student.status)}>
-                        {student.status}
-                      </Badge>
+                      <Skeleton className="h-5 w-16" />
+                      <Skeleton className="h-5 w-16" />
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-medium">${student.monthlyTuition}/mo</p>
-                    <Button variant="outline" size="sm" className="mt-1">
-                      View Details
-                    </Button>
+                ))
+              ) : students.length > 0 ? (
+                students.slice(0, 3).map((student) => (
+                  <div key={student.id} className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-smooth">
+                    <div className="space-y-1">
+                      <p className="font-medium">{student.first_name} {student.last_name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Parent: {student.parent?.first_name} {student.parent?.last_name}
+                      </p>
+                      <div className="flex gap-2">
+                        <Badge className={getDivisionColor(student.division)}>
+                          {student.division}
+                        </Badge>
+                        <Badge variant="outline" className={getStatusColor(student.status || 'Pending')}>
+                          {student.status}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Button variant="outline" size="sm">
+                        View Details
+                      </Button>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No students enrolled yet</p>
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
 
@@ -264,24 +277,42 @@ const Dashboard = () => {
               <CardDescription>Latest updates and notifications</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {mockActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-smooth">
-                  <div className="flex-shrink-0 mt-1">
-                    {activity.type === "enrollment" && <UserCheck className="h-4 w-4 text-success" />}
-                    {activity.type === "payment" && <DollarSign className="h-4 w-4 text-success" />}
-                    {activity.type === "contract" && <FileText className="h-4 w-4 text-warning" />}
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <p className="text-sm">{activity.description}</p>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className={getActivityStatusColor(activity.status)}>
-                        {activity.status}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
+              {activitiesLoading ? (
+                [...Array(3)].map((_, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg border">
+                    <Skeleton className="h-4 w-4 mt-1" />
+                    <div className="flex-1 space-y-1">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-3 w-24" />
                     </div>
                   </div>
+                ))
+              ) : activities.length > 0 ? (
+                activities.map((activity) => (
+                  <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-smooth">
+                    <div className="flex-shrink-0 mt-1">
+                      {getActivityIcon(activity.type)}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <p className="text-sm">{activity.description}</p>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className={activity.status === 'success' ? 'status-active' : 'status-pending'}>
+                          {activity.status}
+                        </Badge>
+                        {activity.created_at && (
+                          <span className="text-xs text-muted-foreground">
+                            {formatDate(activity.created_at)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No recent activity</p>
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
         </div>

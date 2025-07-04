@@ -18,23 +18,23 @@
     --popover: 0 0% 100%;
     --popover-foreground: 262 20% 15%;
 
-    /* Primary - Elegant Purple */
-    --primary: 262 52% 47%;
+    /* Primary - Rose/Dusty Pink */
+    --primary: 351 25% 70%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 262 40% 65%;
-    --primary-dark: 262 60% 35%;
+    --primary-light: 351 20% 80%;
+    --primary-dark: 351 30% 60%;
 
     /* Secondary - Soft Rose */
-    --secondary: 330 25% 90%;
-    --secondary-foreground: 262 20% 15%;
+    --secondary: 351 15% 90%;
+    --secondary-foreground: 351 30% 20%;
 
     /* Muted colors */
     --muted: 262 10% 95%;
     --muted-foreground: 262 10% 45%;
 
     /* Accent - Ballet Pink */
-    --accent: 330 40% 85%;
-    --accent-foreground: 262 20% 15%;
+    --accent: 351 20% 85%;
+    --accent-foreground: 351 30% 20%;
 
     /* Success - Sage Green */
     --success: 140 30% 60%;
