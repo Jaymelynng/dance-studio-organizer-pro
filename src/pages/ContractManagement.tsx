@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ContractTemplatesPage } from '@/components/ContractTemplatesPage';
 import { ContractGeneration } from '@/components/ContractGeneration';
+import { ContractTracking } from '@/components/ContractTracking';
 
 const ContractManagement = () => {
   const navigate = useNavigate();
@@ -29,9 +30,10 @@ const ContractManagement = () => {
         </div>
         
         <Tabs defaultValue="templates" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="templates">Contract Templates</TabsTrigger>
             <TabsTrigger value="generate">Generate Contracts</TabsTrigger>
+            <TabsTrigger value="track">Track Contracts</TabsTrigger>
           </TabsList>
           
           <TabsContent value="templates" className="mt-6">
@@ -42,6 +44,10 @@ const ContractManagement = () => {
             <div className="max-w-2xl mx-auto">
               <ContractGeneration />
             </div>
+          </TabsContent>
+          
+          <TabsContent value="track" className="mt-6">
+            <ContractTracking />
           </TabsContent>
         </Tabs>
       </div>
