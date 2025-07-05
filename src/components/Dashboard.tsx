@@ -24,6 +24,7 @@ import { useStudents } from "@/hooks/useStudents";
 import { useActivities } from "@/hooks/useActivities";
 import { EmptyState } from "@/components/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
+import { GlobalSearch } from "@/components/GlobalSearch";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -50,6 +51,7 @@ const Dashboard = () => {
   
   const [showAllActivities, setShowAllActivities] = useState(false);
   const [activityCollapsed, setActivityCollapsed] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const getDivisionColor = (division: string) => {
     switch (division) {
@@ -226,10 +228,15 @@ const Dashboard = () => {
                 </Button>
               </div>
               <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search students..." className="pl-10" />
-                </div>
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Search everything..." 
+                  className="pl-10 cursor-pointer" 
+                  onClick={() => setIsSearchOpen(true)}
+                  readOnly
+                />
+              </div>
                 <Button variant="outline" size="sm">
                   <Filter className="h-4 w-4" />
                 </Button>
@@ -396,6 +403,8 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
+        
+        <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       </div>
     </div>
   );
