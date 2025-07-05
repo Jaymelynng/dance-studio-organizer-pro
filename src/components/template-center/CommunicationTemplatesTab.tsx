@@ -5,13 +5,13 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Plus, Edit, Trash2, Eye, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { TemplateBuilder } from '@/components/template-builder/TemplateBuilder';
 
 interface CommunicationTemplate {
   id: string;
@@ -167,81 +167,29 @@ export const CommunicationTemplatesTab = () => {
               New Template
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-full max-h-[90vh] h-[90vh]">
             <DialogHeader>
               <DialogTitle>
                 {editingTemplate ? 'Edit Template' : 'Create New Template'}
               </DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="name">Template Name</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g., Payment Reminder"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="category">Category</Label>
-                  <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="payment">Payment</SelectItem>
-                      <SelectItem value="enrollment">Enrollment</SelectItem>
-                      <SelectItem value="general">General</SelectItem>
-                      <SelectItem value="marketing">Marketing</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="subject">Email Subject</Label>
-                <Input
-                  id="subject"
-                  value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  placeholder="e.g., Payment Reminder - {{student_name}}"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="content">Email Content (HTML)</Label>
-                <Textarea
-                  id="content"
-                  value={formData.html_content}
-                  onChange={(e) => setFormData({ ...formData, html_content: e.target.value })}
-                  placeholder="Enter HTML content for the email template..."
-                  className="min-h-[200px] font-mono text-sm"
-                  required
-                />
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="active"
-                  checked={formData.is_active}
-                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-                />
-                <Label htmlFor="active">Active Template</Label>
-              </div>
-
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={saveMutation.isPending}>
-                  {saveMutation.isPending ? 'Saving...' : (editingTemplate ? 'Update' : 'Create')}
-                </Button>
-              </div>
-            </form>
+            
+            <div className="h-full">
+              <TemplateBuilder
+                templateType="email"
+                onSave={(template) => {
+                  const templateData = {
+                    name: template.name,
+                    subject: formData.subject || 'New Email Template',
+                    category: formData.category || 'general',
+                    html_content: template.html,
+                    variables: [],
+                    is_active: formData.is_active
+                  };
+                  saveMutation.mutate(templateData);
+                }}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       </div>
