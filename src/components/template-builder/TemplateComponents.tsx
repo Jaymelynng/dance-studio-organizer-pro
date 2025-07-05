@@ -27,6 +27,11 @@ export const TemplateComponents = ({ components, onDragStart }: TemplateComponen
     return acc;
   }, {} as Record<string, ComponentType[]>);
 
+  // Create a flat array of all components with global indices
+  const allComponents = Object.entries(groupedComponents).flatMap(([category, categoryComponents]) => 
+    categoryComponents.map(component => ({ ...component, category }))
+  );
+
   return (
     <Droppable droppableId="sidebar" isDropDisabled={true}>
       {(provided) => (
@@ -44,32 +49,39 @@ export const TemplateComponents = ({ components, onDragStart }: TemplateComponen
               </div>
               
               <div className="space-y-2">
-                {categoryComponents.map((component, index) => (
-                  <Draggable
-                    key={component.id}
-                    draggableId={component.id}
-                    index={index}
-                  >
-                    {(provided, snapshot) => (
-                      <Card
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className={`cursor-grab hover:shadow-md transition-shadow ${
-                          snapshot.isDragging ? 'shadow-lg rotate-3' : ''
-                        }`}
-                        onDragStart={() => onDragStart(component.id)}
-                      >
-                        <CardContent className="p-3">
-                          <div className="flex items-center gap-3">
-                            <component.icon className="h-5 w-5 text-muted-foreground" />
-                            <span className="text-sm font-medium">{component.label}</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
-                  </Draggable>
-                ))}
+                {categoryComponents.map((component) => {
+                  // Find the global index for this component
+                  const globalIndex = allComponents.findIndex(c => c.id === component.id);
+                  return (
+                    <Draggable
+                      key={component.id}
+                      draggableId={component.id}
+                      index={globalIndex}
+                    >
+                      {(provided, snapshot) => (
+                        <Card
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={`cursor-grab hover:shadow-md transition-shadow ${
+                            snapshot.isDragging ? 'shadow-lg rotate-3' : ''
+                          }`}
+                          onDragStart={() => {
+                            console.log('Drag started for component:', component.id);
+                            onDragStart(component.id);
+                          }}
+                        >
+                          <CardContent className="p-3">
+                            <div className="flex items-center gap-3">
+                              <component.icon className="h-5 w-5 text-muted-foreground" />
+                              <span className="text-sm font-medium">{component.label}</span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </Draggable>
+                  );
+                })}
               </div>
             </div>
           ))}
