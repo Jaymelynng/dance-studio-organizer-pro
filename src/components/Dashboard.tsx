@@ -381,11 +381,11 @@ const Dashboard = () => {
                 <FileText className="h-5 w-5" />
                 <span className="text-xs">Contract Management</span>
               </Button>
-              <Button variant="professional" className="h-16 flex-col gap-2">
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/communications')}>
                 <DollarSign className="h-5 w-5" />
                 <span className="text-xs">Payment Reminder</span>
               </Button>
-              <Button variant="professional" className="h-16 flex-col gap-2">
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/communications')}>
                 <Calendar className="h-5 w-5" />
                 <span className="text-xs">Schedule Report</span>
               </Button>
