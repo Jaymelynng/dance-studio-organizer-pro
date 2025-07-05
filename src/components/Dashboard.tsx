@@ -331,9 +331,9 @@ const Dashboard = () => {
                 <Plus className="h-5 w-5" />
                 <span className="text-xs">New Student</span>
               </Button>
-              <Button variant="professional" className="h-16 flex-col gap-2">
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/contracts')}>
                 <FileText className="h-5 w-5" />
-                <span className="text-xs">Generate Contract</span>
+                <span className="text-xs">Contract Management</span>
               </Button>
               <Button variant="professional" className="h-16 flex-col gap-2">
                 <DollarSign className="h-5 w-5" />

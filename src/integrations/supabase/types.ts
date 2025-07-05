@@ -237,6 +237,39 @@ export type Database = {
           },
         ]
       }
+      contract_templates: {
+        Row: {
+          created_at: string
+          division: string
+          html_content: string
+          id: string
+          is_active: boolean
+          name: string
+          season: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          division: string
+          html_content: string
+          id?: string
+          is_active?: boolean
+          name: string
+          season: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          division?: string
+          html_content?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          season?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contracts: {
         Row: {
           contract_end_date: string | null
