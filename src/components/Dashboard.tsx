@@ -385,9 +385,13 @@ const Dashboard = () => {
                 <DollarSign className="h-5 w-5" />
                 <span className="text-xs">Payment Reminder</span>
               </Button>
-              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/communications')}>
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/templates')}>
+                <FileText className="h-5 w-5" />
+                <span className="text-xs">Template Center</span>
+              </Button>
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/reports')}>
                 <Calendar className="h-5 w-5" />
-                <span className="text-xs">Schedule Report</span>
+                <span className="text-xs">Reports</span>
               </Button>
             </div>
           </CardContent>
