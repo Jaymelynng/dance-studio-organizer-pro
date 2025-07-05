@@ -41,10 +41,10 @@ export const EnglishEditor = ({ formData, onChange }: EnglishEditorProps) => {
   };
 
   return (
-    <Tabs defaultValue="basic" className="w-full">
+    <Tabs defaultValue="content" className="w-full">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="basic">Basic Information</TabsTrigger>
-        <TabsTrigger value="content">Contract Content</TabsTrigger>
+        <TabsTrigger value="content" className="font-semibold">📝 Edit Contract Content</TabsTrigger>
+        <TabsTrigger value="basic">⚙️ Basic Settings</TabsTrigger>
       </TabsList>
       
       <TabsContent value="basic" className="space-y-6">

@@ -84,18 +84,147 @@ export const generateHtmlFromEnglish = (englishData: EnglishFormData): string =>
 </div>`;
 };
 
-// Function to parse HTML and extract English form data (basic implementation)
+// Function to parse HTML and extract English form data
 export const parseHtmlToEnglish = (html: string): Partial<EnglishFormData> => {
-  // This is a simplified parser - in a real app you'd want more robust parsing
   const parsed: Partial<EnglishFormData> = {};
   
-  // Extract company name
-  const companyMatch = html.match(/<h1[^>]*>([^<]+)<\/h1>/);
-  if (companyMatch) parsed.companyName = companyMatch[1].trim();
-  
-  // Extract season
-  const seasonMatch = html.match(/(\d{4}\/\d{4})/);
-  if (seasonMatch) parsed.season = seasonMatch[1];
+  try {
+    // Extract company name
+    const companyMatch = html.match(/<h1[^>]*>([^<]+)<\/h1>/);
+    if (companyMatch) parsed.companyName = companyMatch[1].trim();
+    
+    // Extract season
+    const seasonMatch = html.match(/(\d{4}\/\d{4})/);
+    if (seasonMatch) parsed.season = seasonMatch[1];
+    
+    // Extract director email
+    const directorMatch = html.match(/Director:\*\*\s*([^<\n]+)/);
+    if (directorMatch) parsed.directorEmail = directorMatch[1].trim();
+    
+    // Extract studio contact
+    const studioMatch = html.match(/Studio:\*\*\s*([^<\n]+)/);
+    if (studioMatch) parsed.studioContact = studioMatch[1].trim();
+    
+    // Extract fees
+    const professionalFeeMatch = html.match(/Professional Division:\*\*\s*\$(\d+)/);
+    if (professionalFeeMatch) parsed.professionalFee = professionalFeeMatch[1];
+    
+    const preProFeeMatch = html.match(/Pre-Professional Division:\*\*\s*\$(\d+)/);
+    if (preProFeeMatch) parsed.preProFee = preProFeeMatch[1];
+    
+    const supplementalFeeMatch = html.match(/Supplemental Division:\*\*\s*\$(\d+)/);
+    if (supplementalFeeMatch) parsed.supplementalFee = supplementalFeeMatch[1];
+    
+    // Extract payment terms
+    const dueDateMatch = html.match(/due on the (\d+(?:st|nd|rd|th)) of each month/);
+    if (dueDateMatch) parsed.paymentDueDate = dueDateMatch[1];
+    
+    const invoiceDateMatch = html.match(/sent on the (\d+(?:st|nd|rd|th)) of the previous month/);
+    if (invoiceDateMatch) parsed.invoiceSendDate = invoiceDateMatch[1];
+    
+    const lateFeeMatch = html.match(/\$(\d+) fee after (\d+) days grace period/);
+    if (lateFeeMatch) {
+      parsed.lateFee = lateFeeMatch[1];
+      parsed.lateGracePeriod = lateFeeMatch[2];
+    }
+    
+    // Extract termination notice
+    const terminationMatch = html.match(/requires (\d+) days written notice/);
+    if (terminationMatch) parsed.terminationNotice = terminationMatch[1];
+    
+    // Extract season dates
+    const seasonDatesMatch = html.match(/\(([^)]+) - ([^)]+)\)/);
+    if (seasonDatesMatch) {
+      parsed.seasonStartDate = seasonDatesMatch[1].trim();
+      parsed.seasonEndDate = seasonDatesMatch[2].trim();
+    }
+    
+    // Extract contract sections - look for content between section headers
+    const contractSections: ContractSectionData[] = [];
+    
+    // Find all h3 headers that aren't the main predefined ones
+    const sectionMatches = html.matchAll(/<h3[^>]*>([^<]+)<\/h3>\s*(<div[^>]*>)?(.*?)(?=<h3|<div style="margin-top: 40px|$)/gs);
+    
+    let sectionIndex = 0;
+    for (const match of sectionMatches) {
+      const title = match[1].trim();
+      let content = match[3].trim();
+      
+      // Skip predefined sections that are handled by form fields
+      if (title.includes('Student Information') || 
+          title.includes('Parent/Guardian Information') || 
+          title.includes('Enrollment Agreement') || 
+          title.includes('Tuition & Fees') || 
+          title.includes('Contact Information')) {
+        continue;
+      }
+      
+      // Clean up content - remove extra divs and styling
+      content = content.replace(/<div[^>]*>/g, '').replace(/<\/div>/g, '');
+      
+      if (content && title) {
+        // Determine section type based on title
+        let type: 'paragraph' | 'policy' | 'terms' | 'custom' = 'custom';
+        if (title.toLowerCase().includes('policy')) {
+          type = 'policy';
+        } else if (title.toLowerCase().includes('terms') || title.toLowerCase().includes('agreement')) {
+          type = 'terms';
+        } else if (title.toLowerCase().includes('introduction') || title.toLowerCase().includes('overview')) {
+          type = 'paragraph';
+        }
+        
+        contractSections.push({
+          id: `parsed-section-${sectionIndex++}`,
+          title,
+          content: content.trim(),
+          type,
+          order: sectionIndex,
+        });
+      }
+    }
+    
+    // If no sections found, add some default sections
+    if (contractSections.length === 0) {
+      contractSections.push(
+        {
+          id: 'attendance-policy',
+          title: 'Attendance Policy',
+          content: '<p>Students are required to maintain regular attendance for optimal progress.</p>',
+          type: 'policy',
+          order: 0,
+        },
+        {
+          id: 'injury-policy',
+          title: 'Injury Policy',
+          content: '<p>Students must inform instructors of any injuries or physical limitations.</p>',
+          type: 'policy',
+          order: 1,
+        },
+        {
+          id: 'conduct-policy',
+          title: 'Student Conduct Policy',
+          content: '<p>Students are expected to maintain appropriate behavior and respect for others.</p>',
+          type: 'policy',
+          order: 2,
+        }
+      );
+    }
+    
+    parsed.contractSections = contractSections;
+    
+  } catch (error) {
+    console.error('Error parsing HTML:', error);
+    // Return default sections on error
+    parsed.contractSections = [
+      {
+        id: 'attendance-policy',
+        title: 'Attendance Policy',
+        content: '<p>Students are required to maintain regular attendance for optimal progress.</p>',
+        type: 'policy',
+        order: 0,
+      }
+    ];
+  }
   
   return parsed;
 };
