@@ -5,7 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Save, Eye } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ArrowLeft, Save, Eye, HelpCircle, Info, CheckCircle } from 'lucide-react';
 import { EnglishEditor, EnglishFormData } from '@/components/contract-templates/EnglishEditor';
 import { HtmlEditor } from '@/components/contract-templates/HtmlEditor';
 import { TemplatePreview } from '@/components/contract-templates/TemplatePreview';
@@ -19,6 +21,7 @@ const ContractTemplateEditor = () => {
   const { templates, loading, updateTemplate } = useContractTemplates();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
+  const [showHelp, setShowHelp] = useState(true);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -157,9 +160,44 @@ const ContractTemplateEditor = () => {
           </Button>
         </div>
 
+        {/* Instructions Panel */}
+        <Collapsible open={showHelp} onOpenChange={setShowHelp}>
+          <CollapsibleTrigger asChild>
+            <Button variant="outline" className="w-full mb-4 justify-between">
+              <div className="flex items-center gap-2">
+                <HelpCircle className="h-4 w-4" />
+                Quick Instructions - Click to {showHelp ? 'hide' : 'show'}
+              </div>
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <Alert className="mb-6">
+              <Info className="h-4 w-4" />
+              <AlertDescription>
+                <div className="space-y-2">
+                  <p className="font-semibold">How to use this editor:</p>
+                  <ol className="list-decimal list-inside space-y-1 text-sm">
+                    <li><strong>Update basic info</strong> below (template name, season, division)</li>
+                    <li><strong>Click "📝 Edit Content"</strong> tab to add/edit sections</li>
+                    <li><strong>Add sections:</strong> Choose from dropdown or create custom ones</li>
+                    <li><strong>Edit sections:</strong> Click the edit icon on any section title</li>
+                    <li><strong>Reorder sections:</strong> Drag and drop using the grip handle (⋮⋮)</li>
+                    <li><strong>Preview your work:</strong> Use the "👁 Preview" tab to see the final contract</li>
+                    <li><strong>Save changes:</strong> Click "Save Changes" button (top right)</li>
+                  </ol>
+                </div>
+              </AlertDescription>
+            </Alert>
+          </CollapsibleContent>
+        </Collapsible>
+
         {/* Basic Settings */}
         <div className="bg-card border rounded-lg p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">Template Settings</h2>
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-lg font-semibold">Template Settings</h2>
+            <CheckCircle className="h-4 w-4 text-green-500" />
+            <span className="text-sm text-muted-foreground">Step 1: Update basic information</span>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label htmlFor="name">Template Name</Label>
@@ -201,16 +239,20 @@ const ContractTemplateEditor = () => {
         <div className="bg-card border rounded-lg overflow-hidden">
           <Tabs defaultValue="content" className="w-full">
             <div className="border-b p-4">
-              <TabsList className="grid w-full max-w-md grid-cols-3">
-                <TabsTrigger value="content" className="flex items-center gap-2">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-semibold">Contract Editor</h2>
+                <span className="text-sm text-muted-foreground">Step 2: Build your contract content</span>
+              </div>
+              <TabsList className="grid w-full max-w-lg grid-cols-3">
+                <TabsTrigger value="content" className="flex items-center gap-2" title="Add and edit contract sections">
                   📝 Edit Content
                 </TabsTrigger>
-                <TabsTrigger value="html" className="flex items-center gap-2">
+                <TabsTrigger value="html" className="flex items-center gap-2" title="Advanced: Edit raw HTML">
                   💻 HTML Editor
                 </TabsTrigger>
-                <TabsTrigger value="preview" className="flex items-center gap-2">
+                <TabsTrigger value="preview" className="flex items-center gap-2" title="See how your contract will look">
                   <Eye className="h-4 w-4" />
-                  Preview
+                  Preview Contract
                 </TabsTrigger>
               </TabsList>
             </div>

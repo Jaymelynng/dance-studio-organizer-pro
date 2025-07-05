@@ -5,7 +5,8 @@ import { CustomSectionDialog } from './CustomSectionDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Copy } from 'lucide-react';
+import { Plus, Copy, Info, GripVertical } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface SectionBuilderProps {
   sections: ContractSectionData[];
@@ -99,18 +100,40 @@ export const SectionBuilder = ({ sections, onSectionsChange }: SectionBuilderPro
 
   return (
     <div className="space-y-4">
+      {sections.length === 0 && (
+        <Alert>
+          <Info className="h-4 w-4" />
+          <AlertDescription>
+            <div className="space-y-2">
+              <p className="font-semibold">Get started by adding your first section!</p>
+              <p className="text-sm">
+                Choose from pre-made templates like "Attendance Policy" or "Payment Terms", 
+                or create your own custom section below.
+              </p>
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+      
       <Card>
         <CardHeader>
-          <CardTitle>Add New Section</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Plus className="h-5 w-5" />
+            Add New Section to Contract
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Choose from common dance studio policies or create your own custom section
+          </p>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex gap-2 flex-1">
               <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
                 <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Choose a section template..." />
+                  <SelectValue placeholder="Choose a pre-made section template..." />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="" disabled>Select a template to add...</SelectItem>
                   {SECTION_TEMPLATES.filter(t => t.type !== 'custom').map((template) => (
                     <SelectItem key={template.type + template.title} value={template.type}>
                       {template.title}
@@ -118,7 +141,11 @@ export const SectionBuilder = ({ sections, onSectionsChange }: SectionBuilderPro
                   ))}
                 </SelectContent>
               </Select>
-              <Button onClick={handleAddSection} disabled={!selectedTemplate}>
+              <Button 
+                onClick={handleAddSection} 
+                disabled={!selectedTemplate}
+                title="Add the selected template section to your contract"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Template
               </Button>
@@ -131,37 +158,45 @@ export const SectionBuilder = ({ sections, onSectionsChange }: SectionBuilderPro
         </CardContent>
       </Card>
 
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="sections">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="space-y-3"
-            >
-              {sections.map((section, index) => (
-                <ContractSection
-                  key={section.id}
-                  section={section}
-                  index={index}
-                  onUpdate={handleUpdateSection}
-                  onDelete={handleDeleteSection}
-                  onDuplicate={() => handleDuplicateSection(section)}
-                />
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-
-      {sections.length === 0 && (
-        <Card className="border-dashed">
-          <CardContent className="py-8 text-center text-muted-foreground">
-            <p>No sections added yet. Use the section builder above to add content to your contract.</p>
+      {sections.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <GripVertical className="h-4 w-4" />
+              Your Contract Sections ({sections.length})
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Drag sections to reorder • Click edit (✏️) to change title • Click copy (📋) to duplicate • Click trash (🗑️) to delete
+            </p>
+          </CardHeader>
+          <CardContent>
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="sections">
+                {(provided) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="space-y-3"
+                  >
+                    {sections.map((section, index) => (
+                      <ContractSection
+                        key={section.id}
+                        section={section}
+                        index={index}
+                        onUpdate={handleUpdateSection}
+                        onDelete={handleDeleteSection}
+                        onDuplicate={() => handleDuplicateSection(section)}
+                      />
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
           </CardContent>
         </Card>
       )}
+
     </div>
   );
 };

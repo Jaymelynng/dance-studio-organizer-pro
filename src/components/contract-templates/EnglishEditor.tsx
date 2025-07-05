@@ -83,10 +83,12 @@ export const EnglishEditor = ({ formData, onChange }: EnglishEditorProps) => {
       <TabsContent value="content" className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Contract Content Builder</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              📝 Contract Content Builder
+            </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Build your contract content by adding, editing, and reordering sections. 
-              You can add policies, terms, paragraphs, and custom content sections.
+              This is where you build the main content of your contract. Add sections like policies, 
+              terms, and requirements. Each section can be customized with your own text.
             </p>
           </CardHeader>
           <CardContent>
