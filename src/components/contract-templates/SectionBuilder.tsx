@@ -133,7 +133,6 @@ export const SectionBuilder = ({ sections, onSectionsChange }: SectionBuilderPro
                   <SelectValue placeholder="Choose a pre-made section template..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="" disabled>Select a template to add...</SelectItem>
                   {SECTION_TEMPLATES.filter(t => t.type !== 'custom').map((template) => (
                     <SelectItem key={template.type + template.title} value={template.type}>
                       {template.title}
