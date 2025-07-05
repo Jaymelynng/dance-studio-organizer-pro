@@ -110,6 +110,32 @@ export const useTemplateBuilder = ({ templateType, onSave }: UseTemplateBuilderP
       const [reorderedItem] = newElements.splice(source.index, 1);
       newElements.splice(destination.index, 0, reorderedItem);
       setElements(newElements);
+    } else if (source.droppableId === 'sidebar' && destination.droppableId.startsWith('container-')) {
+      // Dragging from sidebar to container
+      const containerId = destination.droppableId.replace('container-', '');
+      const componentType = componentTypes.find(c => c.id === result.draggableId);
+      
+      if (!componentType) return;
+
+      const newElement: TemplateElement = {
+        id: `element-${Date.now()}`,
+        type: componentType.id as any,
+        content: getDefaultContent(componentType.id),
+        styles: getDefaultStyles(componentType.id),
+        settings: {},
+        ...(componentType.id === 'container' && { children: [] })
+      };
+
+      const newElements = [...elements];
+      const containerIndex = newElements.findIndex(el => el.id === containerId);
+      
+      if (containerIndex !== -1) {
+        const container = { ...newElements[containerIndex] };
+        if (!container.children) container.children = [];
+        container.children.splice(destination.index, 0, newElement);
+        newElements[containerIndex] = container;
+        setElements(newElements);
+      }
     }
   };
 

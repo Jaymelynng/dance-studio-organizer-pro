@@ -65,8 +65,24 @@ export const TemplatePreview = ({ elements }: TemplatePreviewProps) => {
       
       case 'container':
         return (
-          <div key={element.id} style={element.styles}>
-            {element.children?.map(child => renderElement(child))}
+          <div 
+            key={element.id} 
+            style={{
+              minHeight: '80px',
+              padding: '20px',
+              backgroundColor: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: '8px',
+              ...element.styles
+            }}
+          >
+            {element.children && element.children.length > 0 ? (
+              element.children.map(child => renderElement(child))
+            ) : (
+              <div className="text-center text-muted-foreground text-sm py-4">
+                Empty container
+              </div>
+            )}
           </div>
         );
       

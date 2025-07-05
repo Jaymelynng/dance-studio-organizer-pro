@@ -3,6 +3,7 @@ import { Layout } from 'lucide-react';
 import { TemplateElement } from '../types';
 import { ElementRenderer } from './ElementRenderer';
 import { ElementControls } from './ElementControls';
+import { ContainerDropZone } from './ContainerDropZone';
 
 interface TemplateCanvasProps {
   elements: TemplateElement[];
@@ -68,7 +69,17 @@ export const TemplateCanvas = ({
                         onDelete={() => onDeleteElement(element.id)}
                         dragHandleProps={provided.dragHandleProps}
                       />
-                      <ElementRenderer element={element} />
+                      {element.type === 'container' ? (
+                        <ContainerDropZone
+                          element={element}
+                          onDrop={(droppedElement) => {
+                            // This will be handled by the parent component
+                            console.log('Dropped into container:', droppedElement);
+                          }}
+                        />
+                      ) : (
+                        <ElementRenderer element={element} />
+                      )}
                     </div>
                   )}
                 </Draggable>

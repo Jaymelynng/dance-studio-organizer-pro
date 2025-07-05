@@ -48,12 +48,25 @@ export const ElementRenderer = ({ element }: ElementRendererProps) => {
       
       case 'container':
         return (
-          <div style={{ minHeight: '60px' }}>
-            {element.children?.map(child => (
-              <div key={child.id} style={child.styles}>
-                {child.content}
+          <div 
+            style={{ 
+              minHeight: '80px',
+              padding: '20px',
+              backgroundColor: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: '8px',
+              ...element.styles 
+            }}
+          >
+            {element.children && element.children.length > 0 ? (
+              element.children.map(child => (
+                <ElementRenderer key={child.id} element={child} />
+              ))
+            ) : (
+              <div className="text-center text-muted-foreground text-sm py-4">
+                Drop elements here to create content sections
               </div>
-            ))}
+            )}
           </div>
         );
       
