@@ -73,7 +73,8 @@ export const useTemplateBuilder = ({ templateType, onSave }: UseTemplateBuilderP
 
     const { source, destination } = result;
     
-    if (source.droppableId === 'components' && destination.droppableId === 'canvas') {
+    // Check if dragging from sidebar to canvas (source.droppableId will be the draggable ID)
+    if (destination.droppableId === 'canvas' && source.droppableId !== 'canvas') {
       const componentType = componentTypes.find(c => c.id === dragId.current);
       if (!componentType) return;
 
@@ -90,6 +91,7 @@ export const useTemplateBuilder = ({ templateType, onSave }: UseTemplateBuilderP
       newElements.splice(destination.index, 0, newElement);
       setElements(newElements);
     } else if (source.droppableId === 'canvas' && destination.droppableId === 'canvas') {
+      // Reordering within canvas
       const newElements = Array.from(elements);
       const [reorderedItem] = newElements.splice(source.index, 1);
       newElements.splice(destination.index, 0, reorderedItem);
