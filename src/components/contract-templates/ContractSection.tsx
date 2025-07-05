@@ -3,14 +3,14 @@ import { RichTextEditor } from './RichTextEditor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Trash2, GripVertical, Edit2, Check, X } from 'lucide-react';
+import { Trash2, GripVertical, Edit2, Check, X, Copy } from 'lucide-react';
 import { Draggable } from '@hello-pangea/dnd';
 
 export interface ContractSectionData {
   id: string;
   title: string;
   content: string;
-  type: 'paragraph' | 'policy' | 'terms' | 'custom';
+  type: 'paragraph' | 'policy' | 'terms' | 'custom' | 'emergency' | 'medical';
   order: number;
 }
 
@@ -19,9 +19,10 @@ interface ContractSectionProps {
   index: number;
   onUpdate: (section: ContractSectionData) => void;
   onDelete: (id: string) => void;
+  onDuplicate?: () => void;
 }
 
-export const ContractSection = ({ section, index, onUpdate, onDelete }: ContractSectionProps) => {
+export const ContractSection = ({ section, index, onUpdate, onDelete, onDuplicate }: ContractSectionProps) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState(section.title);
 
@@ -83,6 +84,16 @@ export const ContractSection = ({ section, index, onUpdate, onDelete }: Contract
                     >
                       <Edit2 className="h-3 w-3" />
                     </Button>
+                    {onDuplicate && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={onDuplicate}
+                        className="text-muted-foreground hover:text-foreground"
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    )}
                     <Button
                       size="sm"
                       variant="ghost"
