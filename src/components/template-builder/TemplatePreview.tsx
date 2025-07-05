@@ -69,10 +69,13 @@ export const TemplatePreview = ({ elements }: TemplatePreviewProps) => {
             key={element.id} 
             style={{
               minHeight: '80px',
-              padding: '20px',
-              backgroundColor: 'var(--card)',
-              border: '1px solid var(--border)',
-              borderRadius: '8px',
+              padding: element.styles?.padding || '20px',
+              backgroundColor: element.styles?.backgroundColor || element.styles?.background || 'var(--card)',
+              border: element.styles?.border || '1px solid var(--border)',
+              borderRadius: element.styles?.borderRadius || '8px',
+              boxShadow: element.styles?.boxShadow,
+              margin: element.styles?.margin,
+              marginBottom: element.styles?.marginBottom,
               ...element.styles
             }}
           >

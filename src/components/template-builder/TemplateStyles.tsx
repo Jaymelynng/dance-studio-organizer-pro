@@ -225,12 +225,40 @@ export const TemplateStyles = ({ element, onUpdate }: TemplateStylesProps) => {
 
                 {(element.type === 'container' || element.type === 'button') && (
                   <div>
-                    <Label>Background</Label>
+                    <Label>Background Color</Label>
+                    <div className="grid grid-cols-3 gap-2 mt-2">
+                      {colorPresets.map(color => (
+                        <Button
+                          key={color.name}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => updateStyle('backgroundColor', color.value)}
+                          className="h-8 text-xs"
+                          style={{ backgroundColor: color.value === 'transparent' ? 'transparent' : color.value }}
+                        >
+                          {color.name}
+                        </Button>
+                      ))}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => updateStyle('backgroundColor', 'transparent')}
+                        className="h-8 text-xs"
+                      >
+                        Clear
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {element.type === 'container' && (
+                  <div>
+                    <Label>Background Gradient</Label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateStyle('backgroundColor', 'var(--primary)')}
+                        onClick={() => updateStyle('background', 'var(--gradient-primary)')}
                         className="h-8 text-xs"
                       >
                         Primary
@@ -238,10 +266,10 @@ export const TemplateStyles = ({ element, onUpdate }: TemplateStylesProps) => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateStyle('backgroundColor', 'transparent')}
+                        onClick={() => updateStyle('background', 'var(--gradient-secondary)')}
                         className="h-8 text-xs"
                       >
-                        Transparent
+                        Secondary
                       </Button>
                     </div>
                   </div>
