@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { 
   Users, 
   UserCheck, 
@@ -11,9 +12,12 @@ import {
   Plus,
   Search,
   Filter,
-  GraduationCap
+  GraduationCap,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useStudents } from "@/hooks/useStudents";
@@ -43,6 +47,9 @@ const Dashboard = () => {
   const stats = useDashboardStats();
   const { students, loading: studentsLoading } = useStudents();
   const { activities, loading: activitiesLoading } = useActivities();
+  
+  const [showAllActivities, setShowAllActivities] = useState(false);
+  const [activityCollapsed, setActivityCollapsed] = useState(false);
 
   const getDivisionColor = (division: string) => {
     switch (division) {
@@ -204,9 +211,9 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Student Management */}
-          <Card className="shadow-card">
+          <Card className="shadow-card lg:col-span-2">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -278,48 +285,83 @@ const Dashboard = () => {
 
           {/* Recent Activity */}
           <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Latest updates and notifications</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {activitiesLoading ? (
-                [...Array(3)].map((_, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg border">
-                    <Skeleton className="h-4 w-4 mt-1" />
-                    <div className="flex-1 space-y-1">
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-3 w-24" />
-                    </div>
-                  </div>
-                ))
-              ) : activities.length > 0 ? (
-                activities.map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-smooth">
-                    <div className="flex-shrink-0 mt-1">
-                      {getActivityIcon(activity.type)}
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      <p className="text-sm">{activity.description}</p>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className={activity.status === 'success' ? 'status-active' : 'status-pending'}>
-                          {activity.status}
-                        </Badge>
-                        {activity.created_at && (
-                          <span className="text-xs text-muted-foreground">
-                            {formatDate(activity.created_at)}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">No recent activity</p>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg">Recent Activity</CardTitle>
+                  {!activitiesLoading && activities.length > 0 && (
+                    <CardDescription>
+                      {activities.length} activities • {activities.filter(a => a.created_at && new Date(a.created_at).toDateString() === new Date().toDateString()).length} today
+                    </CardDescription>
+                  )}
                 </div>
-              )}
-            </CardContent>
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setActivityCollapsed(!activityCollapsed)}
+                  >
+                    {activityCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                  </Button>
+                </CollapsibleTrigger>
+              </div>
+            </CardHeader>
+            <Collapsible open={!activityCollapsed}>
+              <CollapsibleContent>
+                <CardContent className="space-y-2 pt-0">
+                  {activitiesLoading ? (
+                    [...Array(3)].map((_, i) => (
+                      <div key={i} className="flex items-start gap-2 p-2 rounded border">
+                        <Skeleton className="h-3 w-3 mt-1" />
+                        <div className="flex-1 space-y-1">
+                          <Skeleton className="h-3 w-full" />
+                          <Skeleton className="h-2 w-16" />
+                        </div>
+                      </div>
+                    ))
+                  ) : activities.length > 0 ? (
+                    <>
+                      {(showAllActivities ? activities : activities.slice(0, 5)).map((activity) => (
+                        <div key={activity.id} className="flex items-start gap-2 p-2 rounded hover:bg-muted/30 transition-smooth">
+                          <div className="flex-shrink-0 mt-0.5">
+                            {getActivityIcon(activity.type)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs leading-relaxed truncate">{activity.description}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge variant="outline" className={`text-xs h-4 ${activity.status === 'success' ? 'status-active' : 'status-pending'}`}>
+                                {activity.status}
+                              </Badge>
+                              {activity.created_at && (
+                                <span className="text-xs text-muted-foreground">
+                                  {formatDate(activity.created_at)}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {activities.length > 5 && (
+                        <div className="pt-2 border-t">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="w-full text-xs h-8"
+                            onClick={() => setShowAllActivities(!showAllActivities)}
+                          >
+                            {showAllActivities ? 'Show Less' : `Show ${activities.length - 5} More`}
+                          </Button>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="text-center py-6">
+                      <p className="text-muted-foreground text-sm">No recent activity</p>
+                    </div>
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
           </Card>
         </div>
 
