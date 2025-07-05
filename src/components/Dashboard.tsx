@@ -14,7 +14,10 @@ import {
   Filter,
   GraduationCap,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  AlertCircle,
+  Clock,
+  CheckCircle
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -22,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useStudents } from "@/hooks/useStudents";
 import { useActivities } from "@/hooks/useActivities";
+import { useOpenTasks } from "@/hooks/useOpenTasks";
 import { EmptyState } from "@/components/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GlobalSearch } from "@/components/GlobalSearch";
@@ -48,9 +52,11 @@ const Dashboard = () => {
   const stats = useDashboardStats();
   const { students, loading: studentsLoading } = useStudents();
   const { activities, loading: activitiesLoading } = useActivities();
+  const { tasks: openTasks, loading: tasksLoading } = useOpenTasks();
   
   const [showAllActivities, setShowAllActivities] = useState(false);
   const [activityCollapsed, setActivityCollapsed] = useState(false);
+  const [tasksCollapsed, setTasksCollapsed] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const getDivisionColor = (division: string) => {
@@ -79,6 +85,19 @@ const Dashboard = () => {
     }
   };
 
+  const getTaskIcon = (type: string) => {
+    switch (type) {
+      case "signature":
+        return <FileText className="h-4 w-4 text-warning" />;
+      case "payment":
+        return <DollarSign className="h-4 w-4 text-destructive" />;
+      case "document":
+        return <FileText className="h-4 w-4 text-primary" />;
+      default:
+        return <AlertCircle className="h-4 w-4 text-muted-foreground" />;
+    }
+  };
+
   const getActivityIcon = (type: string) => {
     switch (type) {
       case "enrollment":
@@ -89,6 +108,19 @@ const Dashboard = () => {
         return <FileText className="h-4 w-4 text-warning" />;
       default:
         return <FileText className="h-4 w-4 text-muted-foreground" />;
+    }
+  };
+
+  const getUrgencyColor = (urgency: string) => {
+    switch (urgency) {
+      case "high":
+        return "text-destructive border-destructive bg-destructive/10";
+      case "medium":
+        return "text-warning border-warning bg-warning/10";
+      case "low":
+        return "text-muted-foreground border-muted-foreground bg-muted/10";
+      default:
+        return "text-muted-foreground";
     }
   };
 
@@ -212,6 +244,110 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Open Tasks Section */}
+        {openTasks.length > 0 && (
+          <Card className="shadow-card border-l-4 border-l-warning">
+            <Collapsible open={!tasksCollapsed}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5 text-warning" />
+                      Open Tasks & Action Items
+                    </CardTitle>
+                    <CardDescription>
+                      {openTasks.length} tasks requiring attention
+                    </CardDescription>
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setTasksCollapsed(!tasksCollapsed)}
+                    >
+                      {tasksCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className="space-y-3 pt-0">
+                  {tasksLoading ? (
+                    [...Array(3)].map((_, i) => (
+                      <div key={i} className="flex items-start gap-3 p-3 rounded border">
+                        <Skeleton className="h-4 w-4 mt-1" />
+                        <div className="flex-1 space-y-2">
+                          <Skeleton className="h-4 w-full" />
+                          <Skeleton className="h-3 w-24" />
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    openTasks.slice(0, 5).map((task) => (
+                      <div key={task.id} className="flex items-start gap-3 p-3 rounded border hover:bg-muted/30 transition-smooth">
+                        <div className="flex-shrink-0 mt-0.5">
+                          {getTaskIcon(task.type)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <p className="font-medium text-sm">{task.title}</p>
+                              <p className="text-xs text-muted-foreground">{task.description}</p>
+                              {task.student_name && (
+                                <p className="text-xs text-primary mt-1">Student: {task.student_name}</p>
+                              )}
+                            </div>
+                            <Badge 
+                              variant="outline" 
+                              className={`text-xs ${getUrgencyColor(task.urgency)}`}
+                            >
+                              {task.urgency}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center gap-2 mt-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-6 px-2 text-xs"
+                              onClick={() => {
+                                if (task.type === 'signature' || task.type === 'document') {
+                                  navigate('/contracts');
+                                } else if (task.type === 'payment') {
+                                  navigate('/payments');
+                                }
+                              }}
+                            >
+                              Take Action
+                            </Button>
+                            {task.due_date && (
+                              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                Due {formatDate(task.due_date)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                  {openTasks.length > 5 && (
+                    <div className="pt-2 border-t">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full text-xs h-8"
+                        onClick={() => navigate('/contracts')}
+                      >
+                        View All {openTasks.length} Tasks
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Student Management */}
