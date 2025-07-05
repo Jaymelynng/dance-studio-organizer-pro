@@ -408,12 +408,12 @@ const Communications = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>Email Templates</CardTitle>
-                    <CardDescription>Manage reusable email templates</CardDescription>
+                    <CardTitle>Template Builder</CardTitle>
+                    <CardDescription>Create beautiful, branded email templates with drag & drop</CardDescription>
                   </div>
-                  <Button variant="elegant">
+                  <Button variant="elegant" onClick={() => window.open('/template-builder?type=email', '_blank')}>
                     <Plus className="h-4 w-4 mr-2" />
-                    New Template
+                    Open Template Builder
                   </Button>
                 </div>
               </CardHeader>
