@@ -245,109 +245,37 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Open Tasks Section */}
-        {openTasks.length > 0 && (
-          <Card className="shadow-card border-l-4 border-l-warning">
-            <Collapsible open={!tasksCollapsed}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <AlertCircle className="h-5 w-5 text-warning" />
-                      Open Tasks & Action Items
-                    </CardTitle>
-                    <CardDescription>
-                      {openTasks.length} tasks requiring attention
-                    </CardDescription>
-                  </div>
-                  <CollapsibleTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setTasksCollapsed(!tasksCollapsed)}
-                    >
-                      {tasksCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
-                    </Button>
-                  </CollapsibleTrigger>
-                </div>
-              </CardHeader>
-              <CollapsibleContent>
-                <CardContent className="space-y-3 pt-0">
-                  {tasksLoading ? (
-                    [...Array(3)].map((_, i) => (
-                      <div key={i} className="flex items-start gap-3 p-3 rounded border">
-                        <Skeleton className="h-4 w-4 mt-1" />
-                        <div className="flex-1 space-y-2">
-                          <Skeleton className="h-4 w-full" />
-                          <Skeleton className="h-3 w-24" />
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    openTasks.slice(0, 5).map((task) => (
-                      <div key={task.id} className="flex items-start gap-3 p-3 rounded border hover:bg-muted/30 transition-smooth">
-                        <div className="flex-shrink-0 mt-0.5">
-                          {getTaskIcon(task.type)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <p className="font-medium text-sm">{task.title}</p>
-                              <p className="text-xs text-muted-foreground">{task.description}</p>
-                              {task.student_name && (
-                                <p className="text-xs text-primary mt-1">Student: {task.student_name}</p>
-                              )}
-                            </div>
-                            <Badge 
-                              variant="outline" 
-                              className={`text-xs ${getUrgencyColor(task.urgency)}`}
-                            >
-                              {task.urgency}
-                            </Badge>
-                          </div>
-                          <div className="flex items-center gap-2 mt-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-6 px-2 text-xs"
-                              onClick={() => {
-                                if (task.type === 'signature' || task.type === 'document') {
-                                  navigate('/contracts');
-                                } else if (task.type === 'payment') {
-                                  navigate('/payments');
-                                }
-                              }}
-                            >
-                              Take Action
-                            </Button>
-                            {task.due_date && (
-                              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                Due {formatDate(task.due_date)}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                  {openTasks.length > 5 && (
-                    <div className="pt-2 border-t">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full text-xs h-8"
-                        onClick={() => navigate('/contracts')}
-                      >
-                        View All {openTasks.length} Tasks
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </CollapsibleContent>
-            </Collapsible>
-          </Card>
-        )}
+        {/* Quick Actions */}
+        <Card className="shadow-card">
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>Common tasks and operations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/enroll')}>
+                <Plus className="h-5 w-5" />
+                <span className="text-xs">New Student</span>
+              </Button>
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/contracts')}>
+                <FileText className="h-5 w-5" />
+                <span className="text-xs">Contracts</span>
+              </Button>
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/communications')}>
+                <DollarSign className="h-5 w-5" />
+                <span className="text-xs">Payments</span>
+              </Button>
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/templates')}>
+                <FileText className="h-5 w-5" />
+                <span className="text-xs">Templates</span>
+              </Button>
+              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/reports')}>
+                <Calendar className="h-5 w-5" />
+                <span className="text-xs">Reports</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Student Management */}
@@ -508,37 +436,106 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Quick Actions */}
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks and operations</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/enroll')}>
-                <Plus className="h-5 w-5" />
-                <span className="text-xs">New Student</span>
-              </Button>
-              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/contracts')}>
-                <FileText className="h-5 w-5" />
-                <span className="text-xs">Contract Management</span>
-              </Button>
-              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/communications')}>
-                <DollarSign className="h-5 w-5" />
-                <span className="text-xs">Payment Reminder</span>
-              </Button>
-              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/templates')}>
-                <FileText className="h-5 w-5" />
-                <span className="text-xs">Template Center</span>
-              </Button>
-              <Button variant="professional" className="h-16 flex-col gap-2" onClick={() => navigate('/reports')}>
-                <Calendar className="h-5 w-5" />
-                <span className="text-xs">Reports</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Open Tasks Section */}
+        {openTasks.length > 0 && (
+          <Card className="shadow-card border-l-4 border-l-warning/30">
+            <Collapsible open={!tasksCollapsed}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4 text-warning" />
+                      Open Tasks
+                    </CardTitle>
+                    <CardDescription className="text-sm">
+                      {openTasks.length} items requiring attention
+                    </CardDescription>
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setTasksCollapsed(!tasksCollapsed)}
+                    >
+                      {tasksCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className="space-y-2 pt-0">
+                  {tasksLoading ? (
+                    [...Array(3)].map((_, i) => (
+                      <div key={i} className="flex items-start gap-3 p-2 rounded border">
+                        <Skeleton className="h-3 w-3 mt-1" />
+                        <div className="flex-1 space-y-1">
+                          <Skeleton className="h-3 w-full" />
+                          <Skeleton className="h-2 w-16" />
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    openTasks.slice(0, 3).map((task) => (
+                      <div key={task.id} className="flex items-start gap-2 p-2 rounded border hover:bg-muted/30 transition-smooth">
+                        <div className="flex-shrink-0 mt-0.5">
+                          {getTaskIcon(task.type)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <p className="text-xs font-medium">{task.title}</p>
+                              <p className="text-xs text-muted-foreground">{task.description}</p>
+                            </div>
+                            <Badge 
+                              variant="outline" 
+                              className={`text-xs h-4 ${getUrgencyColor(task.urgency)}`}
+                            >
+                              {task.urgency}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-6 px-2 text-xs"
+                              onClick={() => {
+                                if (task.type === 'signature' || task.type === 'document') {
+                                  navigate('/contracts');
+                                } else if (task.type === 'payment') {
+                                  navigate('/payments');
+                                }
+                              }}
+                            >
+                              Action
+                            </Button>
+                            {task.due_date && (
+                              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {formatDate(task.due_date)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                  {openTasks.length > 3 && (
+                    <div className="pt-2 border-t">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full text-xs h-6"
+                        onClick={() => navigate('/contracts')}
+                      >
+                        View All {openTasks.length} Tasks
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
+        )}
         
         <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       </div>
