@@ -1,7 +1,15 @@
 import { EnglishFormData } from './EnglishEditor';
+import { ContractSectionData } from './ContractSection';
 
 // Function to generate HTML from English form data
 export const generateHtmlFromEnglish = (englishData: EnglishFormData): string => {
+  const sectionsHtml = englishData.contractSections?.map(section => `
+    <div style="margin-bottom: 25px;">
+      <h3 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">${section.title}</h3>
+      ${section.content}
+    </div>
+  `).join('') || '';
+
   return `
 <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;">
   <div style="text-align: center; margin-bottom: 30px;">
@@ -28,7 +36,7 @@ export const generateHtmlFromEnglish = (englishData: EnglishFormData): string =>
   <div style="margin-bottom: 25px;">
     <h3 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Enrollment Agreement</h3>
     <p>This agreement is for the ${englishData.season} dance season${englishData.seasonStartDate && englishData.seasonEndDate ? ` (${englishData.seasonStartDate} - ${englishData.seasonEndDate})` : ''}.</p>
-    <p>Early termination requires ${englishData.terminationNotice} days written notice. Students dismissed for behavioral reasons remain financially responsible for ${englishData.dismissalPeriod} days following dismissal.</p>
+    <p>Early termination requires ${englishData.terminationNotice} days written notice.</p>
   </div>
 
   <div style="margin-bottom: 25px;">
@@ -46,18 +54,7 @@ export const generateHtmlFromEnglish = (englishData: EnglishFormData): string =>
     <p>Late payments incur a $${englishData.lateFee} fee after ${englishData.lateGracePeriod} days grace period.</p>
   </div>
 
-  <div style="margin-bottom: 25px;">
-    <h3 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Studio Policies</h3>
-    
-    <h4 style="color: #34495e;">Attendance Policy</h4>
-    <p>${englishData.attendancePolicy}</p>
-    
-    <h4 style="color: #34495e;">Injury Policy</h4>
-    <p>${englishData.injuryPolicy}</p>
-    
-    <h4 style="color: #34495e;">Student Conduct</h4>
-    <p>${englishData.conductPolicy}</p>
-  </div>
+  ${sectionsHtml}
 
   <div style="margin-bottom: 25px;">
     <h3 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Contact Information</h3>
@@ -74,7 +71,7 @@ export const generateHtmlFromEnglish = (englishData: EnglishFormData): string =>
       </div>
       <div style="width: 45%;">
         <p><strong>Student Signature (if 18+):</strong></p>
-        <div style="border-bottom: 1px solid #000; height: 40px; margin-bottom: 10px;"></div>
+        <div style="border-bottom: 1px solid #000; height:40px; margin-bottom: 10px;"></div>
         <p>Date: ________________</p>
       </div>
     </div>

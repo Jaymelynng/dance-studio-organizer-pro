@@ -31,11 +31,31 @@ export const ContractTemplatesPage = () => {
     invoiceSendDate: '25th',
     lateFee: '35',
     lateGracePeriod: '3',
-    attendancePolicy: 'Students are required to maintain regular attendance for optimal progress.',
-    injuryPolicy: 'Students must inform instructors of any injuries or physical limitations.',
-    conductPolicy: 'Students are expected to maintain appropriate behavior and respect for others.',
     directorEmail: 'cody@degageclassical.com',
-    studioContact: 'Degagé Classical Ballet'
+    studioContact: 'Degagé Classical Ballet',
+    contractSections: [
+      {
+        id: 'attendance-policy',
+        title: 'Attendance Policy',
+        content: '<p>Students are required to maintain regular attendance for optimal progress.</p>',
+        type: 'policy',
+        order: 0,
+      },
+      {
+        id: 'injury-policy',
+        title: 'Injury Policy',
+        content: '<p>Students must inform instructors of any injuries or physical limitations.</p>',
+        type: 'policy',
+        order: 1,
+      },
+      {
+        id: 'conduct-policy',
+        title: 'Student Conduct Policy',
+        content: '<p>Students are expected to maintain appropriate behavior and respect for others.</p>',
+        type: 'policy',
+        order: 2,
+      },
+    ]
   });
 
   const handleCreateTemplate = async (templateData: {
@@ -80,7 +100,7 @@ export const ContractTemplatesPage = () => {
   };
 
   // Handler for English form changes
-  const handleEnglishFormChange = (field: keyof EnglishFormData, value: string) => {
+  const handleEnglishFormChange = (field: keyof EnglishFormData, value: any) => {
     const updatedEnglishData = { ...englishFormData, [field]: value };
     setEnglishFormData(updatedEnglishData);
     
