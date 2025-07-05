@@ -285,28 +285,28 @@ const Dashboard = () => {
 
           {/* Recent Activity */}
           <Card className="shadow-card">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-lg">Recent Activity</CardTitle>
-                  {!activitiesLoading && activities.length > 0 && (
-                    <CardDescription>
-                      {activities.length} activities • {activities.filter(a => a.created_at && new Date(a.created_at).toDateString() === new Date().toDateString()).length} today
-                    </CardDescription>
-                  )}
-                </div>
-                <CollapsibleTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setActivityCollapsed(!activityCollapsed)}
-                  >
-                    {activityCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
-                  </Button>
-                </CollapsibleTrigger>
-              </div>
-            </CardHeader>
             <Collapsible open={!activityCollapsed}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg">Recent Activity</CardTitle>
+                    {!activitiesLoading && activities.length > 0 && (
+                      <CardDescription>
+                        {activities.length} activities • {activities.filter(a => a.created_at && new Date(a.created_at).toDateString() === new Date().toDateString()).length} today
+                      </CardDescription>
+                    )}
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setActivityCollapsed(!activityCollapsed)}
+                    >
+                      {activityCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
               <CollapsibleContent>
                 <CardContent className="space-y-2 pt-0">
                   {activitiesLoading ? (
