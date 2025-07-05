@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { TemplateElement } from './types';
 import { Palette, Type, Layout, Settings } from 'lucide-react';
+import { ImageUpload } from './components/ImageUpload';
 
 interface TemplateStylesProps {
   element: TemplateElement;
@@ -113,13 +114,9 @@ export const TemplateStyles = ({ element, onUpdate }: TemplateStylesProps) => {
 
             {element.type === 'image' && (
               <div>
-                <Label htmlFor="image-url">Image URL</Label>
-                <Input
-                  id="image-url"
-                  type="url"
+                <ImageUpload
                   value={element.content || ''}
-                  onChange={(e) => updateContent(e.target.value)}
-                  placeholder="https://example.com/image.jpg"
+                  onChange={updateContent}
                 />
               </div>
             )}

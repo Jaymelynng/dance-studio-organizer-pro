@@ -9,7 +9,7 @@ interface ElementControlsProps {
 
 export const ElementControls = ({ onDuplicate, onDelete, dragHandleProps }: ElementControlsProps) => {
   return (
-    <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+    <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-all duration-200 flex gap-1 z-10 bg-white rounded-md shadow-md p-1">
       <Button
         size="sm"
         variant="secondary"

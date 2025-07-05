@@ -26,8 +26,8 @@ export const TemplateCanvas = ({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`min-h-96 bg-white rounded-lg shadow-card p-6 ${
-              snapshot.isDraggingOver ? 'ring-2 ring-primary ring-opacity-50' : ''
+            className={`min-h-96 bg-white rounded-lg shadow-card p-6 transition-all ${
+              snapshot.isDraggingOver ? 'ring-2 ring-primary ring-opacity-50 bg-primary/5' : ''
             }`}
           >
             {elements.length === 0 && (
@@ -44,9 +44,9 @@ export const TemplateCanvas = ({
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
-                    className={`group relative ${
-                      selectedElement === element.id ? 'ring-2 ring-primary' : ''
-                    } ${snapshot.isDragging ? 'opacity-50' : ''}`}
+                    className={`group relative transition-all ${
+                      selectedElement === element.id ? 'ring-2 ring-primary shadow-lg' : 'hover:ring-1 hover:ring-muted-foreground/50'
+                    } ${snapshot.isDragging ? 'opacity-50 rotate-1 scale-105' : ''}`}
                     onClick={() => onSelectElement(element.id)}
                   >
                     <ElementControls
