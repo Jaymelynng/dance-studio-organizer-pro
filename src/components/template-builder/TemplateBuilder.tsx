@@ -48,7 +48,6 @@ export const TemplateBuilder = ({ templateType, onSave }: TemplateBuilderProps) 
           setPreviewMode={setPreviewMode}
           components={componentTypes}
           templates={presetTemplates[templateType] || []}
-          onDragStart={(id) => dragId.current = id}
           onSelectTemplate={handleSelectTemplate}
         />
 

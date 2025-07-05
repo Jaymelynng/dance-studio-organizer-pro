@@ -7,10 +7,9 @@ import { ComponentType } from './types';
 
 interface TemplateComponentsProps {
   components: ComponentType[];
-  onDragStart: (id: string) => void;
 }
 
-export const TemplateComponents = ({ components, onDragStart }: TemplateComponentsProps) => {
+export const TemplateComponents = ({ components }: TemplateComponentsProps) => {
   const categories = {
     content: { label: 'Content', color: 'bg-blue-100 text-blue-800' },
     layout: { label: 'Layout', color: 'bg-green-100 text-green-800' },
@@ -66,10 +65,6 @@ export const TemplateComponents = ({ components, onDragStart }: TemplateComponen
                           className={`cursor-grab hover:shadow-md transition-shadow ${
                             snapshot.isDragging ? 'shadow-lg rotate-3' : ''
                           }`}
-                          onDragStart={() => {
-                            console.log('Drag started for component:', component.id);
-                            onDragStart(component.id);
-                          }}
                         >
                           <CardContent className="p-3">
                             <div className="flex items-center gap-3">

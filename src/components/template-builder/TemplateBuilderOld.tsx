@@ -342,7 +342,6 @@ export const TemplateBuilder = ({ templateType, onSave }: TemplateBuilderProps) 
             <TabsContent value="components" className="flex-1 overflow-auto p-4">
               <TemplateComponents 
                 components={componentTypes}
-                onDragStart={(id) => dragId.current = id}
               />
             </TabsContent>
 

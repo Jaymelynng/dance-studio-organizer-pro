@@ -12,7 +12,6 @@ interface TemplateSidebarProps {
   setPreviewMode: (mode: boolean) => void;
   components: ComponentType[];
   templates: Template[];
-  onDragStart: (id: string) => void;
   onSelectTemplate: (template: Template) => void;
 }
 
@@ -22,7 +21,6 @@ export const TemplateSidebar = ({
   setPreviewMode, 
   components, 
   templates, 
-  onDragStart, 
   onSelectTemplate 
 }: TemplateSidebarProps) => {
   return (
@@ -64,7 +62,6 @@ export const TemplateSidebar = ({
         <TabsContent value="components" className="flex-1 overflow-auto p-4">
           <TemplateComponents 
             components={components}
-            onDragStart={onDragStart}
           />
         </TabsContent>
 

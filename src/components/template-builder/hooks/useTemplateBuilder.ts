@@ -70,7 +70,7 @@ export const useTemplateBuilder = ({ templateType, onSave }: UseTemplateBuilderP
 
   const onDragEnd = (result: DropResult, componentTypes: any[]) => {
     console.log('Drag end result:', result);
-    console.log('Drag ID current:', dragId.current);
+    console.log('Draggable ID from result:', result.draggableId);
     
     if (!result.destination) {
       console.log('No destination, drag cancelled');
@@ -81,11 +81,12 @@ export const useTemplateBuilder = ({ templateType, onSave }: UseTemplateBuilderP
     
     // Check if dragging from sidebar to canvas
     if (source.droppableId === 'sidebar' && destination.droppableId === 'canvas') {
-      const componentType = componentTypes.find(c => c.id === dragId.current);
+      // Use result.draggableId directly instead of dragId.current
+      const componentType = componentTypes.find(c => c.id === result.draggableId);
       console.log('Found component type:', componentType);
       
       if (!componentType) {
-        console.log('Component type not found for ID:', dragId.current);
+        console.log('Component type not found for ID:', result.draggableId);
         return;
       }
 
