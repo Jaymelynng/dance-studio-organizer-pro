@@ -8,7 +8,7 @@ import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { TemplateElement } from './TemplateBuilder';
+import { TemplateElement } from './types';
 import { Palette, Type, Layout, Settings } from 'lucide-react';
 
 interface TemplateStylesProps {

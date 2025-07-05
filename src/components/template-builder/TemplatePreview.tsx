@@ -1,4 +1,4 @@
-import { TemplateElement } from './TemplateBuilder';
+import { TemplateElement } from './types';
 
 interface TemplatePreviewProps {
   elements: TemplateElement[];

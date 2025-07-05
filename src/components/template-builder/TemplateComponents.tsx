@@ -3,12 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LucideIcon } from 'lucide-react';
 
-interface ComponentType {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  category: string;
-}
+import { ComponentType } from './types';
 
 interface TemplateComponentsProps {
   components: ComponentType[];

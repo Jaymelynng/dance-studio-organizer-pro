@@ -1,15 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TemplateElement } from './TemplateBuilder';
+import { TemplateElement } from './types';
 import { Mail, FileText, Megaphone, TrendingUp, Star } from 'lucide-react';
 
-interface Template {
-  name: string;
-  description: string;
-  category: string;
-  elements: TemplateElement[];
-}
+import { Template } from './types';
 
 interface TemplateLibraryProps {
   templates: Template[];
