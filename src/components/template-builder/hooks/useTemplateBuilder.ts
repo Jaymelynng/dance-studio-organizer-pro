@@ -73,8 +73,8 @@ export const useTemplateBuilder = ({ templateType, onSave }: UseTemplateBuilderP
 
     const { source, destination } = result;
     
-    // Check if dragging from sidebar to canvas (source.droppableId will be the draggable ID)
-    if (destination.droppableId === 'canvas' && source.droppableId !== 'canvas') {
+    // Check if dragging from sidebar to canvas
+    if (source.droppableId === 'sidebar' && destination.droppableId === 'canvas') {
       const componentType = componentTypes.find(c => c.id === dragId.current);
       if (!componentType) return;
 
