@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import StudentEnrollment from "./pages/StudentEnrollment";
 import ContractManagement from "./pages/ContractManagement";
 import ContractTemplateEditor from "./pages/ContractTemplateEditor";
+import StudentProfile from "./pages/StudentProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/enroll" element={<StudentEnrollment />} />
           <Route path="/contracts" element={<ContractManagement />} />
           <Route path="/contracts/edit/:id" element={<ContractTemplateEditor />} />
+          <Route path="/students/:id" element={<StudentProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

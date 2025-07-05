@@ -258,8 +258,12 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <Button variant="outline" size="sm">
-                        View Details
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => navigate(`/students/${student.id}`)}
+                      >
+                        Edit Profile
                       </Button>
                     </div>
                   </div>
