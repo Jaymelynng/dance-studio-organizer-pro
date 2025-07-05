@@ -39,26 +39,48 @@ export const TemplateCanvas = ({
             )}
 
             {elements.map((element, index) => (
-              <Draggable key={element.id} draggableId={element.id} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    className={`group relative transition-all ${
-                      selectedElement === element.id ? 'ring-2 ring-primary shadow-lg' : 'hover:ring-1 hover:ring-muted-foreground/50'
-                    } ${snapshot.isDragging ? 'opacity-50 rotate-1 scale-105' : ''}`}
-                    onClick={() => onSelectElement(element.id)}
-                  >
-                    <ElementControls
-                      onDuplicate={() => onDuplicateElement(element.id)}
-                      onDelete={() => onDeleteElement(element.id)}
-                      dragHandleProps={provided.dragHandleProps}
-                    />
-                    <ElementRenderer element={element} />
-                  </div>
-                )}
-              </Draggable>
+              <div key={element.id}>
+                {/* Drop zone indicator */}
+                <div 
+                  className={`h-1 mx-4 rounded-full transition-all duration-200 ${
+                    snapshot.isDraggingOver ? 'bg-primary/30 opacity-100' : 'opacity-0'
+                  }`}
+                />
+                
+                <Draggable draggableId={element.id} index={index}>
+                  {(provided, dragSnapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      className={`group relative mb-4 p-2 rounded-lg transition-all duration-200 ${
+                        selectedElement === element.id 
+                          ? 'ring-2 ring-primary shadow-lg bg-primary/5' 
+                          : 'hover:ring-1 hover:ring-border hover:shadow-md'
+                      } ${
+                        dragSnapshot.isDragging 
+                          ? 'opacity-75 rotate-1 scale-105 shadow-xl' 
+                          : ''
+                      }`}
+                      onClick={() => onSelectElement(element.id)}
+                    >
+                      <ElementControls
+                        onDuplicate={() => onDuplicateElement(element.id)}
+                        onDelete={() => onDeleteElement(element.id)}
+                        dragHandleProps={provided.dragHandleProps}
+                      />
+                      <ElementRenderer element={element} />
+                    </div>
+                  )}
+                </Draggable>
+              </div>
             ))}
+            
+            {/* Final drop zone indicator */}
+            <div 
+              className={`h-1 mx-4 rounded-full transition-all duration-200 ${
+                snapshot.isDraggingOver ? 'bg-primary/30 opacity-100' : 'opacity-0'
+              }`}
+            />
             {provided.placeholder}
           </div>
         )}
