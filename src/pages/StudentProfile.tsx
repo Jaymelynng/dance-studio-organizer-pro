@@ -192,74 +192,66 @@ const StudentProfile = () => {
                   <p className="mt-1">{student.school_name || 'Not specified'}</p>
                 </div>
 
-                {student.dance_experience && (
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Dance Experience</label>
-                    <p className="mt-1 text-sm">{student.dance_experience}</p>
-                  </div>
-                )}
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Dance Experience</label>
+                  <p className="mt-1 text-sm">{student.dance_experience || 'Not specified'}</p>
+                </div>
 
-                {student.goals && (
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Goals</label>
-                    <p className="mt-1 text-sm">{student.goals}</p>
-                  </div>
-                )}
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Goals</label>
+                  <p className="mt-1 text-sm">{student.goals || 'Not specified'}</p>
+                </div>
 
-                {student.medical_notes && (
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Medical Notes</label>
-                    <p className="mt-1 text-sm">{student.medical_notes}</p>
-                  </div>
-                )}
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Medical Notes</label>
+                  <p className="mt-1 text-sm">{student.medical_notes || 'Not specified'}</p>
+                </div>
 
-                {student.dietary_restrictions && (
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Dietary Restrictions</label>
-                    <p className="mt-1 text-sm">{student.dietary_restrictions}</p>
-                  </div>
-                )}
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Dietary Restrictions</label>
+                  <p className="mt-1 text-sm">{student.dietary_restrictions || 'Not specified'}</p>
+                </div>
               </CardContent>
             </Card>
 
             {/* Parent Information */}
-            {student.parent && (
-              <Card className="shadow-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    Parent/Guardian Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  Parent/Guardian Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Name</label>
+                  <p className="mt-1 font-medium">
+                    {student.parent ? `${student.parent.first_name} ${student.parent.last_name}` : 'Not specified'}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Name</label>
-                    <p className="mt-1 font-medium">{student.parent.first_name} {student.parent.last_name}</p>
+                    <label className="text-sm font-medium text-muted-foreground">Email</label>
+                    <p className="mt-1">{student.parent?.email || 'Not specified'}</p>
                   </div>
-
-                  <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Email</label>
-                      <p className="mt-1">{student.parent.email}</p>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Phone</label>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <span>{student.parent?.phone || 'Not specified'}</span>
                     </div>
-                    {student.parent.phone && (
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Phone</label>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Phone className="h-4 w-4 text-muted-foreground" />
-                          <span>{student.parent.phone}</span>
-                        </div>
-                      </div>
-                    )}
                   </div>
+                </div>
 
-                  {(student.parent.address || student.parent.city || student.parent.state) && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Address</label>
+                  <div className="flex items-start gap-2 mt-1">
+                    <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Address</label>
-                      <div className="flex items-start gap-2 mt-1">
-                        <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-                        <div>
-                          {student.parent.address && <p>{student.parent.address}</p>}
+                      {student.parent?.address ? (
+                        <>
+                          <p>{student.parent.address}</p>
                           {(student.parent.city || student.parent.state || student.parent.zip_code) && (
                             <p>
                               {student.parent.city && student.parent.city}
@@ -268,33 +260,29 @@ const StudentProfile = () => {
                               {student.parent.zip_code && ` ${student.parent.zip_code}`}
                             </p>
                           )}
-                        </div>
-                      </div>
+                        </>
+                      ) : (
+                        <p>Not specified</p>
+                      )}
                     </div>
-                  )}
+                  </div>
+                </div>
 
-                  {student.parent.emergency_contact_name && (
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Emergency Contact</label>
-                      <div className="mt-1 space-y-1">
-                        <p className="font-medium">{student.parent.emergency_contact_name}</p>
-                        {student.parent.emergency_contact_phone && (
-                          <div className="flex items-center gap-2">
-                            <Phone className="h-4 w-4 text-muted-foreground" />
-                            <span>{student.parent.emergency_contact_phone}</span>
-                          </div>
-                        )}
-                        {student.parent.emergency_contact_relationship && (
-                          <p className="text-sm text-muted-foreground">
-                            Relationship: {student.parent.emergency_contact_relationship}
-                          </p>
-                        )}
-                      </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Emergency Contact</label>
+                  <div className="mt-1 space-y-1">
+                    <p className="font-medium">{student.parent?.emergency_contact_name || 'Not specified'}</p>
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <span>{student.parent?.emergency_contact_phone || 'Not specified'}</span>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                    <p className="text-sm text-muted-foreground">
+                      Relationship: {student.parent?.emergency_contact_relationship || 'Not specified'}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
