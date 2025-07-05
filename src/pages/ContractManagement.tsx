@@ -10,7 +10,7 @@ const ContractManagement = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-hero">
       <div className="container mx-auto p-6">
         <div className="mb-6">
           <Button 

@@ -85,13 +85,13 @@ const Dashboard = () => {
 
   if (stats.loading) {
     return (
-      <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-hero">
         <div className="container mx-auto p-6 space-y-8">
           <div className="text-center space-y-4 py-8">
-            <h1 className="text-4xl font-bold text-foreground mb-2">
+            <h1 className="text-4xl font-bold text-white mb-2">
               Dégagé Classical Conservatory
             </h1>
-            <p className="text-muted-foreground text-lg">Management Dashboard</p>
+            <p className="text-white/90 text-lg">Management Dashboard</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...Array(4)].map((_, i) => (
@@ -111,13 +111,13 @@ const Dashboard = () => {
   // Show empty state for new studio
   if (stats.totalStudents === 0 && !stats.loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-hero">
         <div className="container mx-auto p-6 space-y-8">
           <div className="text-center space-y-4 py-8">
-            <h1 className="text-4xl font-bold text-foreground mb-2 animate-float">
+            <h1 className="text-4xl font-bold text-white mb-2 animate-float">
               Dégagé Classical Conservatory
             </h1>
-            <p className="text-muted-foreground text-lg">Management Dashboard</p>
+            <p className="text-white/90 text-lg">Management Dashboard</p>
           </div>
           
           <div className="max-w-2xl mx-auto">
@@ -135,14 +135,14 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-hero">
       <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
         <div className="text-center space-y-4 py-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2 animate-float">
+          <h1 className="text-4xl font-bold text-white mb-2 animate-float">
             Dégagé Classical Conservatory
           </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-white/90 text-lg">
             Management Dashboard
           </p>
         </div>

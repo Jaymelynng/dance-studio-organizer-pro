@@ -18,23 +18,23 @@
     --popover: 0 0% 100%;
     --popover-foreground: 262 20% 15%;
 
-    /* Primary - Professional Blue */
-    --primary: 214 84% 56%;
+    /* Primary - Rose/Dusty Pink */
+    --primary: 351 25% 70%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 214 84% 66%;
-    --primary-dark: 214 84% 46%;
+    --primary-light: 351 20% 80%;
+    --primary-dark: 351 30% 60%;
 
-    /* Secondary - Neutral Gray */
-    --secondary: 210 11% 96%;
-    --secondary-foreground: 210 11% 20%;
+    /* Secondary - Soft Rose */
+    --secondary: 351 15% 90%;
+    --secondary-foreground: 351 30% 20%;
 
     /* Muted colors */
-    --muted: 210 11% 96%;
-    --muted-foreground: 210 11% 45%;
+    --muted: 262 10% 95%;
+    --muted-foreground: 262 10% 45%;
 
-    /* Accent - Light Blue */
-    --accent: 210 40% 96%;
-    --accent-foreground: 210 40% 20%;
+    /* Accent - Ballet Pink */
+    --accent: 351 20% 85%;
+    --accent-foreground: 351 30% 20%;
 
     /* Success - Sage Green */
     --success: 140 30% 60%;
@@ -58,7 +58,7 @@
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
     --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--accent)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 50%, hsl(var(--background)) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-light)) 50%, hsl(var(--accent)) 100%);
     --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
 
     /* Shadows */
