@@ -17,7 +17,7 @@ import {
   Search, 
   Filter,
   TrendingUp,
-  TrendingDown,
+  Settings,
   Calendar,
   Users
 } from 'lucide-react';
@@ -27,16 +27,21 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
+import { usePaymentCategories } from '@/hooks/usePaymentCategories';
 
 const PaymentCenter = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedStudent, setSelectedStudent] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [paymentAmount, setPaymentAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [paymentNotes, setPaymentNotes] = useState('');
   const [isRecordPaymentOpen, setIsRecordPaymentOpen] = useState(false);
+
+  // Fetch payment categories
+  const { data: categories } = usePaymentCategories();
 
   // Fetch payments with student info
   const { data: payments, isLoading: paymentsLoading } = useQuery({
@@ -47,7 +52,8 @@ const PaymentCenter = () => {
         .select(`
           *,
           student:students(first_name, last_name, division),
-          payment_schedule:payment_schedules(due_date, payment_type)
+          payment_schedule:payment_schedules(due_date, payment_type),
+          category:payment_categories(name, description)
         `)
         .order('payment_date', { ascending: false });
       
@@ -66,7 +72,8 @@ const PaymentCenter = () => {
           *,
           contract:contracts(
             student:students(first_name, last_name, division)
-          )
+          ),
+          category:payment_categories(name, description)
         `)
         .order('due_date', { ascending: true });
       
@@ -92,11 +99,12 @@ const PaymentCenter = () => {
 
   // Record payment mutation
   const recordPaymentMutation = useMutation({
-    mutationFn: async ({ studentId, amount, method, notes }: { studentId: string; amount: string; method: string; notes: string }) => {
+    mutationFn: async ({ studentId, categoryId, amount, method, notes }: { studentId: string; categoryId: string; amount: string; method: string; notes: string }) => {
       const { data, error } = await supabase
         .from('payments')
         .insert({
           student_id: studentId,
+          category_id: categoryId,
           amount: parseFloat(amount),
           payment_method: method as any,
           payment_date: new Date().toISOString(),
@@ -113,6 +121,7 @@ const PaymentCenter = () => {
       queryClient.invalidateQueries({ queryKey: ['payment_schedules'] });
       setIsRecordPaymentOpen(false);
       setSelectedStudent('');
+      setSelectedCategory('');
       setPaymentAmount('');
       setPaymentMethod('');
       setPaymentNotes('');
@@ -131,7 +140,7 @@ const PaymentCenter = () => {
   });
 
   const handleRecordPayment = () => {
-    if (!selectedStudent || !paymentAmount || !paymentMethod) {
+    if (!selectedStudent || !selectedCategory || !paymentAmount || !paymentMethod) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields",
@@ -142,6 +151,7 @@ const PaymentCenter = () => {
 
     recordPaymentMutation.mutate({
       studentId: selectedStudent,
+      categoryId: selectedCategory,
       amount: paymentAmount,
       method: paymentMethod,
       notes: paymentNotes
@@ -235,14 +245,24 @@ const PaymentCenter = () => {
             Back to Dashboard
           </Button>
           
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-white">Payment Center</h1>
-            <p className="text-white/80">Manage tuition payments and financial records</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Payment Center</h1>
+              <p className="text-white/80">Manage tuition payments and financial records</p>
+            </div>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/payment-settings')}
+              className="mt-4 sm:mt-0"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </Button>
           </div>
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Card className="shadow-card">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -298,10 +318,19 @@ const PaymentCenter = () => {
         </div>
         
         <Tabs defaultValue="payments" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="payments">Payment History</TabsTrigger>
-            <TabsTrigger value="schedules">Payment Schedules</TabsTrigger>
-            <TabsTrigger value="overdue">Overdue Payments</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 h-auto p-1">
+            <TabsTrigger value="payments" className="text-xs sm:text-sm py-2 sm:py-3">
+              <span className="hidden sm:inline">Payment History</span>
+              <span className="sm:hidden">History</span>
+            </TabsTrigger>
+            <TabsTrigger value="schedules" className="text-xs sm:text-sm py-2 sm:py-3">
+              <span className="hidden sm:inline">Payment Schedules</span>
+              <span className="sm:hidden">Schedules</span>
+            </TabsTrigger>
+            <TabsTrigger value="overdue" className="text-xs sm:text-sm py-2 sm:py-3">
+              <span className="hidden sm:inline">Overdue Payments</span>
+              <span className="sm:hidden">Overdue</span>
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="payments" className="mt-6">
@@ -312,12 +341,12 @@ const PaymentCenter = () => {
                     <CardTitle>Payment History</CardTitle>
                     <CardDescription>All recorded payments and transactions</CardDescription>
                   </div>
-                  <div className="flex gap-2">
-                    <div className="relative">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="relative flex-1 sm:flex-none">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Search payments..." className="pl-10 w-64" />
+                      <Input placeholder="Search payments..." className="pl-10 sm:w-64" />
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="min-h-[40px]">
                       <Filter className="h-4 w-4" />
                     </Button>
                     <Dialog open={isRecordPaymentOpen} onOpenChange={setIsRecordPaymentOpen}>
@@ -327,7 +356,7 @@ const PaymentCenter = () => {
                           Record Payment
                         </Button>
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="max-w-[95vw] sm:max-w-md max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                           <DialogTitle>Record New Payment</DialogTitle>
                           <DialogDescription>
@@ -345,6 +374,28 @@ const PaymentCenter = () => {
                                 {students?.map((student) => (
                                   <SelectItem key={student.id} value={student.id}>
                                     {student.first_name} {student.last_name} ({student.division})
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Payment Category *</label>
+                            <Select value={selectedCategory} onValueChange={(value) => {
+                              setSelectedCategory(value);
+                              // Auto-fill amount if category has default
+                              const category = categories?.find(c => c.id === value);
+                              if (category?.default_amount) {
+                                setPaymentAmount(category.default_amount.toString());
+                              }
+                            }}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select payment category" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {categories?.map((category) => (
+                                  <SelectItem key={category.id} value={category.id}>
+                                    {category.name} {category.default_amount ? `($${category.default_amount})` : ''}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
@@ -387,7 +438,7 @@ const PaymentCenter = () => {
                           <Button 
                             onClick={handleRecordPayment} 
                             disabled={recordPaymentMutation.isPending}
-                            className="w-full"
+                            className="w-full min-h-[48px]"
                           >
                             {recordPaymentMutation.isPending ? "Recording..." : "Record Payment"}
                           </Button>
@@ -465,10 +516,10 @@ const PaymentCenter = () => {
                       Upcoming (Next 30 Days)
                     </h3>
                     {getUpcomingSchedules().length > 0 ? (
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         {getUpcomingSchedules().map((schedule) => (
-                          <div key={schedule.id} className="flex items-center justify-between p-3 border rounded-lg">
-                            <div>
+                          <div key={schedule.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg gap-3">
+                            <div className="flex-1">
                               <p className="font-medium">
                                 {schedule.contract?.student ? 
                                   `${schedule.contract.student.first_name} ${schedule.contract.student.last_name}` : 
@@ -476,12 +527,12 @@ const PaymentCenter = () => {
                                 }
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                {schedule.payment_type} • Due {new Date(schedule.due_date).toLocaleDateString()}
+                                {schedule.category?.name || schedule.payment_type} • Due {new Date(schedule.due_date).toLocaleDateString()}
                               </p>
                             </div>
                             <div className="text-right">
-                              <div className="font-bold">{formatCurrency(Number(schedule.amount))}</div>
-                              <Badge className={getPaymentStatusColor(schedule.status || 'Pending')}>
+                              <div className="font-bold text-lg">{formatCurrency(Number(schedule.amount))}</div>
+                              <Badge className={getPaymentStatusColor(schedule.status || 'Pending')} variant="outline">
                                 {schedule.status}
                               </Badge>
                             </div>

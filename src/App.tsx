@@ -12,6 +12,7 @@ import Communications from "./pages/Communications";
 import Documents from "./pages/Documents";
 import Calendar from "./pages/Calendar";
 import PaymentCenter from "./pages/PaymentCenter";
+import PaymentSettings from "./pages/PaymentSettings";
 import TemplateCenter from "./pages/TemplateCenter";
 import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/documents" element={<Documents />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/payments" element={<PaymentCenter />} />
+          <Route path="/payment-settings" element={<PaymentSettings />} />
           <Route path="/templates" element={<TemplateCenter />} />
           <Route path="/reports" element={<Reports />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

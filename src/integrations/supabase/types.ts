@@ -533,9 +533,46 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_categories: {
+        Row: {
+          created_at: string | null
+          default_amount: number | null
+          description: string | null
+          division_specific: boolean | null
+          id: string
+          is_active: boolean | null
+          name: string
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          default_amount?: number | null
+          description?: string | null
+          division_specific?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          default_amount?: number | null
+          description?: string | null
+          division_specific?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       payment_schedules: {
         Row: {
           amount: number
+          category_id: string | null
           contract_id: string | null
           created_at: string | null
           due_date: string
@@ -545,6 +582,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          category_id?: string | null
           contract_id?: string | null
           created_at?: string | null
           due_date: string
@@ -554,6 +592,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          category_id?: string | null
           contract_id?: string | null
           created_at?: string | null
           due_date?: string
@@ -562,6 +601,13 @@ export type Database = {
           status?: Database["public"]["Enums"]["payment_status"] | null
         }
         Relationships: [
+          {
+            foreignKeyName: "payment_schedules_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "payment_categories"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "payment_schedules_contract_id_fkey"
             columns: ["contract_id"]
@@ -574,6 +620,7 @@ export type Database = {
       payments: {
         Row: {
           amount: number
+          category_id: string | null
           created_at: string | null
           id: string
           late_fee: number | null
@@ -586,6 +633,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          category_id?: string | null
           created_at?: string | null
           id?: string
           late_fee?: number | null
@@ -598,6 +646,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          category_id?: string | null
           created_at?: string | null
           id?: string
           late_fee?: number | null
@@ -609,6 +658,13 @@ export type Database = {
           transaction_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "payments_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "payment_categories"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "payments_payment_schedule_id_fkey"
             columns: ["payment_schedule_id"]
@@ -710,6 +766,42 @@ export type Database = {
           id?: string
           setting_key?: string
           setting_value?: Json
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      tuition_rates: {
+        Row: {
+          created_at: string | null
+          division: Database["public"]["Enums"]["division_type"]
+          effective_date: string | null
+          id: string
+          is_active: boolean | null
+          monthly_tuition: number
+          registration_fee: number
+          season: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          division: Database["public"]["Enums"]["division_type"]
+          effective_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          monthly_tuition: number
+          registration_fee: number
+          season?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          division?: Database["public"]["Enums"]["division_type"]
+          effective_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          monthly_tuition?: number
+          registration_fee?: number
+          season?: string | null
           updated_at?: string | null
         }
         Relationships: []
