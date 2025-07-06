@@ -75,13 +75,22 @@ const ContractTemplateEditor = () => {
         html_content: template.html_content
       });
       
-      // Try to parse HTML and populate English form
-      const parsedEnglish = parseHtmlToEnglish(template.html_content);
-      setEnglishFormData(prev => ({
-        ...prev,
-        ...parsedEnglish,
-        season: template.season
-      }));
+      // Priority: Load from form_data first, then parse HTML as fallback
+      if (template.form_data && Object.keys(template.form_data).length > 0) {
+        setEnglishFormData(prev => ({
+          ...prev,
+          ...template.form_data,
+          season: template.season
+        }));
+      } else {
+        // Fallback: Parse HTML and populate English form
+        const parsedEnglish = parseHtmlToEnglish(template.html_content);
+        setEnglishFormData(prev => ({
+          ...prev,
+          ...parsedEnglish,
+          season: template.season
+        }));
+      }
     }
   }, [template]);
 
@@ -90,7 +99,11 @@ const ContractTemplateEditor = () => {
     
     setSaving(true);
     try {
-      await updateTemplate(id, formData);
+      // Save both the HTML content and the structured form data
+      await updateTemplate(id, {
+        ...formData,
+        form_data: englishFormData
+      });
       toast({
         title: "Success",
         description: "Contract template saved successfully",

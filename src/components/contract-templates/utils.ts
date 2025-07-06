@@ -10,6 +10,16 @@ export const generateHtmlFromEnglish = (englishData: EnglishFormData): string =>
     </div>
   `).join('') || '';
 
+  // Use proper variable placeholders that won't conflict with template literals
+  const monthlyTuitionVar = '{{monthly_tuition}}';
+  const studentNameVar = '{{student_name}}';
+  const studentDobVar = '{{student_dob}}';
+  const divisionVar = '{{division}}';
+  const parentNamesVar = '{{parent_names}}';
+  const parentAddressVar = '{{parent_address}}';
+  const parentPhoneVar = '{{parent_phone}}';
+  const parentEmailVar = '{{parent_email}}';
+
   return `
 <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;">
   <div style="text-align: center; margin-bottom: 30px;">
@@ -20,17 +30,17 @@ export const generateHtmlFromEnglish = (englishData: EnglishFormData): string =>
 
   <div style="margin-bottom: 25px;">
     <h3 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Student Information</h3>
-    <p><strong>Student Name:</strong> \{\{student_name\}\}</p>
-    <p><strong>Date of Birth:</strong> \{\{student_dob\}\}</p>
-    <p><strong>Division:</strong> \{\{division\}\}</p>
+    <p><strong>Student Name:</strong> ${studentNameVar}</p>
+    <p><strong>Date of Birth:</strong> ${studentDobVar}</p>
+    <p><strong>Division:</strong> ${divisionVar}</p>
   </div>
 
   <div style="margin-bottom: 25px;">
     <h3 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Parent/Guardian Information</h3>
-    <p><strong>Parent/Guardian Name:</strong> \{\{parent_names\}\}</p>
-    <p><strong>Address:</strong> \{\{parent_address\}\}</p>
-    <p><strong>Phone:</strong> \{\{parent_phone\}\}</p>
-    <p><strong>Email:</strong> \{\{parent_email\}\}</p>
+    <p><strong>Parent/Guardian Name:</strong> ${parentNamesVar}</p>
+    <p><strong>Address:</strong> ${parentAddressVar}</p>
+    <p><strong>Phone:</strong> ${parentPhoneVar}</p>
+    <p><strong>Email:</strong> ${parentEmailVar}</p>
   </div>
 
   <div style="margin-bottom: 25px;">
@@ -49,7 +59,7 @@ export const generateHtmlFromEnglish = (englishData: EnglishFormData): string =>
         <li><strong>Supplemental Division:</strong> $${englishData.supplementalFee}</li>
       </ul>
     </div>
-    <p><strong>Your Monthly Tuition:</strong> $\{\{monthly_tuition\}\}</p>
+    <p><strong>Your Monthly Tuition:</strong> $${monthlyTuitionVar}</p>
     <p>Tuition is due on the ${englishData.paymentDueDate} of each month. Invoices will be sent on the ${englishData.invoiceSendDate} of the previous month.</p>
     <p>Late payments incur a $${englishData.lateFee} fee after ${englishData.lateGracePeriod} days grace period.</p>
   </div>
@@ -98,21 +108,21 @@ export const parseHtmlToEnglish = (html: string): Partial<EnglishFormData> => {
     if (seasonMatch) parsed.season = seasonMatch[1];
     
     // Extract director email
-    const directorMatch = html.match(/Director:\*\*\s*([^<\n]+)/);
+    const directorMatch = html.match(/<strong>Program Director:<\/strong>\s*([^<\n]+)/);
     if (directorMatch) parsed.directorEmail = directorMatch[1].trim();
     
     // Extract studio contact
-    const studioMatch = html.match(/Studio:\*\*\s*([^<\n]+)/);
+    const studioMatch = html.match(/<strong>Studio:<\/strong>\s*([^<\n]+)/);
     if (studioMatch) parsed.studioContact = studioMatch[1].trim();
     
     // Extract fees
-    const professionalFeeMatch = html.match(/Professional Division:\*\*\s*\$(\d+)/);
+    const professionalFeeMatch = html.match(/<strong>Professional Division:<\/strong>\s*\$(\d+)/);
     if (professionalFeeMatch) parsed.professionalFee = professionalFeeMatch[1];
     
-    const preProFeeMatch = html.match(/Pre-Professional Division:\*\*\s*\$(\d+)/);
+    const preProFeeMatch = html.match(/<strong>Pre-Professional Division:<\/strong>\s*\$(\d+)/);
     if (preProFeeMatch) parsed.preProFee = preProFeeMatch[1];
     
-    const supplementalFeeMatch = html.match(/Supplemental Division:\*\*\s*\$(\d+)/);
+    const supplementalFeeMatch = html.match(/<strong>Supplemental Division:<\/strong>\s*\$(\d+)/);
     if (supplementalFeeMatch) parsed.supplementalFee = supplementalFeeMatch[1];
     
     // Extract payment terms

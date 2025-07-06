@@ -8,6 +8,7 @@ interface ContractTemplate {
   division: string;
   season: string;
   html_content: string;
+  form_data?: any; // EnglishFormData structure
   is_active: boolean;
   created_at: string;
   updated_at: string;
