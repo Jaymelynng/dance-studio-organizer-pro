@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useContractTemplates } from '@/hooks/useContractTemplates';
 import { CreateTemplateDialog } from './contract-templates/CreateTemplateDialog';
 import { TemplateCard } from './contract-templates/TemplateCard';
@@ -6,6 +7,7 @@ import { EnglishFormData } from './contract-templates/EnglishEditor';
 
 export const ContractTemplatesPage = () => {
   const { templates, loading, createTemplate, deleteTemplate } = useContractTemplates();
+  const navigate = useNavigate();
 
   const handleCreateTemplate = async (templateData: {
     name: string;
@@ -18,8 +20,8 @@ export const ContractTemplatesPage = () => {
   };
 
   const startEdit = (template: any) => {
-    // Navigate to the full-page editor instead of opening modal
-    window.location.href = `/contracts/edit/${template.id}`;
+    // Navigate to the full-page editor with live preview
+    navigate(`/contracts/edit/${template.id}`);
   };
 
   return (
