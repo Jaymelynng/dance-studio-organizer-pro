@@ -98,9 +98,9 @@ export const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden">
+      <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[85vh] overflow-hidden">
         <DialogHeader>
-          <DialogTitle>Global Search</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl">Global Search</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
@@ -115,7 +115,7 @@ export const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             />
           </div>
 
-          <div className="max-h-[50vh] overflow-y-auto space-y-4">
+          <div className="max-h-[55vh] sm:max-h-[50vh] overflow-y-auto space-y-4">
             {isLoading && searchQuery.length >= 2 && (
               <div className="space-y-2">
                 {[...Array(3)].map((_, i) => (
@@ -149,22 +149,22 @@ export const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                           className="p-3 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
                           onClick={() => handleResultClick('student', student.id)}
                         >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-medium">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium truncate">
                                 {student.first_name} {student.last_name}
                               </p>
-                              <p className="text-sm text-muted-foreground">
-                                {student.division} • {student.parent?.first_name} {student.parent?.last_name}
+                              <p className="text-sm text-muted-foreground truncate">
+                                {student.division}
+                              </p>
+                              <p className="text-xs text-muted-foreground truncate sm:hidden">
+                                {student.parent?.first_name} {student.parent?.last_name}
                               </p>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Badge className={getStatusColor(student.status || 'Pending')}>
+                            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                              <Badge className={getStatusColor(student.status || 'Pending')} variant="outline">
                                 {student.status}
                               </Badge>
-                              <Button variant="ghost" size="sm">
-                                <Eye className="h-4 w-4" />
-                              </Button>
                             </div>
                           </div>
                         </div>

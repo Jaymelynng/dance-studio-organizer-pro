@@ -54,12 +54,12 @@ const DashboardStudentManagement = ({
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Search everything..." 
-              className="pl-10 cursor-pointer" 
+              className="pl-10 cursor-pointer h-11" 
               onClick={() => setIsSearchOpen(true)}
               readOnly
             />
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="icon" className="shrink-0">
             <Filter className="h-4 w-4" />
           </Button>
         </div>
@@ -78,14 +78,14 @@ const DashboardStudentManagement = ({
           ))
         ) : students.length > 0 ? (
           students.slice(0, 3).map((student) => (
-            <div key={student.id} className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-smooth">
-              <div className="space-y-1">
-                <p className="font-medium">{student.first_name} {student.last_name}</p>
+            <div key={student.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-lg border hover:bg-muted/50 transition-smooth">
+              <div className="flex-1 space-y-2">
+                <p className="font-medium text-base">{student.first_name} {student.last_name}</p>
                 <p className="text-sm text-muted-foreground">
                   Parent: {student.parent?.first_name} {student.parent?.last_name}
                 </p>
-                <div className="flex gap-2">
-                  <Badge className={getDivisionColor(student.division)}>
+                <div className="flex flex-wrap gap-2">
+                  <Badge className={getDivisionColor(student.division)} variant="secondary">
                     {student.division}
                   </Badge>
                   <Badge variant="outline" className={getStatusColor(student.status || 'Pending')}>
@@ -93,13 +93,15 @@ const DashboardStudentManagement = ({
                   </Badge>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="flex sm:flex-col gap-2">
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => navigate(`/students/${student.id}`)}
+                  className="flex-1 sm:flex-none min-h-[40px]"
                 >
-                  Edit Profile
+                  <span className="sm:hidden">Edit</span>
+                  <span className="hidden sm:inline">Edit Profile</span>
                 </Button>
               </div>
             </div>

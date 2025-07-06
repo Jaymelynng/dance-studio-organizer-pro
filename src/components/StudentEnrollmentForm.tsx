@@ -114,27 +114,27 @@ export const StudentEnrollmentForm = ({ onSuccess }: StudentEnrollmentFormProps)
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 px-4 sm:px-6">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold text-foreground">Student Enrollment</h1>
-        <p className="text-muted-foreground">Complete the form below to enroll a new student</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Student Enrollment</h1>
+        <p className="text-muted-foreground text-sm sm:text-base">Complete the form below to enroll a new student</p>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Student Information Card */}
           <Card className="shadow-card">
-            <CardHeader>
+            <CardHeader className="pb-4">
               <div className="flex items-center gap-2">
                 <GraduationCap className="h-5 w-5 text-primary" />
-                <CardTitle>Student Information</CardTitle>
+                <CardTitle className="text-lg sm:text-xl">Student Information</CardTitle>
               </div>
-              <CardDescription>
+              <CardDescription className="text-sm">
                 Basic information about the student enrolling
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <FormField
                   control={form.control}
                   name="student_first_name"
@@ -163,7 +163,7 @@ export const StudentEnrollmentForm = ({ onSuccess }: StudentEnrollmentFormProps)
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <FormField
                   control={form.control}
                   name="date_of_birth"
@@ -201,7 +201,7 @@ export const StudentEnrollmentForm = ({ onSuccess }: StudentEnrollmentFormProps)
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <FormField
                   control={form.control}
                   name="grade_level"
