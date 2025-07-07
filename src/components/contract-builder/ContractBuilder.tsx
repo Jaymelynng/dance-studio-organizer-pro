@@ -51,8 +51,8 @@ export const ContractBuilder = ({
       const elements = [...defaultContractElements];
       
       // Add custom sections from the existing contract
-      if (parsedData.contractSections) {
-        parsedData.contractSections.forEach((section, index) => {
+      if (initialFormData.contractSections) {
+        initialFormData.contractSections.forEach((section, index) => {
           elements.push({
             id: `section-${Date.now()}-${index}`,
             type: 'section',
@@ -72,7 +72,7 @@ export const ContractBuilder = ({
 
   const handleSave = () => {
     // Convert elements back to HTML and form data
-    const defaultFormData: EnglishFormData = {
+    const baseFormData: EnglishFormData = initialFormData || {
       companyName: 'Degagé Classical Ballet',
       season: '2025/2026',
       seasonStartDate: '',
@@ -91,8 +91,6 @@ export const ContractBuilder = ({
       contractSections: []
     };
     
-    const formData = initialFormData || defaultFormData;
-    
     // Extract sections from elements
     const sections = elements
       .filter(el => el.type === 'section')
@@ -105,7 +103,7 @@ export const ContractBuilder = ({
       }));
     
     const updatedFormData = {
-      ...formData,
+      ...baseFormData,
       contractSections: sections
     };
     

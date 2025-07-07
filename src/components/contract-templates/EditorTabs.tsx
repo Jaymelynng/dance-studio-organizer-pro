@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Eye, Columns, X } from 'lucide-react';
 import { EnglishEditor, EnglishFormData } from './EnglishEditor';
+import { BeautifulFormEditor } from './BeautifulFormEditor';
 import { HtmlEditor } from './HtmlEditor';
 import { TemplatePreview } from './TemplatePreview';
 
@@ -55,7 +56,7 @@ export const EditorTabs = ({
               </div>
               
               <TabsContent value="content" className="flex-1 p-4 overflow-y-auto">
-                <EnglishEditor 
+                <BeautifulFormEditor 
                   formData={englishFormData} 
                   onChange={onEnglishFormChange} 
                 />
@@ -121,7 +122,7 @@ export const EditorTabs = ({
         </div>
         
         <TabsContent value="content" className="p-6 min-h-[600px]">
-          <EnglishEditor 
+          <BeautifulFormEditor 
             formData={englishFormData} 
             onChange={onEnglishFormChange} 
           />
