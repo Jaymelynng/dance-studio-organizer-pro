@@ -9,204 +9,215 @@ export const ContractElementRenderer = ({ element }: ContractElementRendererProp
     switch (element.type) {
       case 'header':
         return (
-          <div style={element.styles}>
-            {element.content}
+          <div 
+            className="p-4 border-2 border-dashed border-primary/30 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">HEADER</span>
+            </div>
+            <div className="font-semibold text-foreground">
+              {element.content || 'Header Text'}
+            </div>
           </div>
         );
 
       case 'text':
         return (
-          <div style={element.styles}>
-            <div dangerouslySetInnerHTML={{ __html: element.content || '' }} />
+          <div 
+            className="p-4 border-2 border-dashed border-blue-300 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">TEXT BLOCK</span>
+            </div>
+            <div className="text-sm text-foreground line-clamp-3">
+              {element.content ? (
+                <div dangerouslySetInnerHTML={{ __html: element.content.slice(0, 150) + (element.content.length > 150 ? '...' : '') }} />
+              ) : (
+                'Click to edit text content...'
+              )}
+            </div>
           </div>
         );
 
       case 'student-info':
         return (
-          <div style={element.styles}>
-            <h3 style={{ 
-              color: '#2c3e50', 
-              borderBottom: '2px solid #3498db', 
-              paddingBottom: '5px',
-              marginBottom: '15px'
-            }}>
-              {element.content || 'Student Information'}
-            </h3>
-            <div style={{ marginBottom: '10px' }}>
-              <strong>Student Name:</strong> {'{{student_name}}'}
+          <div 
+            className="p-4 border-2 border-dashed border-green-300 rounded-lg bg-green-50 hover:bg-green-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">STUDENT INFO</span>
             </div>
-            <div style={{ marginBottom: '10px' }}>
-              <strong>Date of Birth:</strong> {'{{student_dob}}'}
-            </div>
-            <div style={{ marginBottom: '10px' }}>
-              <strong>Division:</strong> {'{{division}}'}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="w-20 text-xs text-muted-foreground">Name:</span>
+                <span className="text-sm bg-white px-2 py-1 rounded border">{'{{student_name}}'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-20 text-xs text-muted-foreground">DOB:</span>
+                <span className="text-sm bg-white px-2 py-1 rounded border">{'{{student_dob}}'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-20 text-xs text-muted-foreground">Division:</span>
+                <span className="text-sm bg-white px-2 py-1 rounded border">{'{{division}}'}</span>
+              </div>
             </div>
           </div>
         );
 
       case 'parent-info':
         return (
-          <div style={element.styles}>
-            <h3 style={{ 
-              color: '#2c3e50', 
-              borderBottom: '2px solid #3498db', 
-              paddingBottom: '5px',
-              marginBottom: '15px'
-            }}>
-              {element.content || 'Parent/Guardian Information'}
-            </h3>
-            <div style={{ marginBottom: '10px' }}>
-              <strong>Parent/Guardian Name:</strong> {'{{parent_names}}'}
+          <div 
+            className="p-4 border-2 border-dashed border-purple-300 rounded-lg bg-purple-50 hover:bg-purple-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">PARENT INFO</span>
             </div>
-            <div style={{ marginBottom: '10px' }}>
-              <strong>Address:</strong> {'{{parent_address}}'}
-            </div>
-            <div style={{ marginBottom: '10px' }}>
-              <strong>Phone:</strong> {'{{parent_phone}}'}
-            </div>
-            <div style={{ marginBottom: '10px' }}>
-              <strong>Email:</strong> {'{{parent_email}}'}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="w-16 text-xs text-muted-foreground">Name:</span>
+                <span className="text-sm bg-white px-2 py-1 rounded border">{'{{parent_names}}'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-16 text-xs text-muted-foreground">Address:</span>
+                <span className="text-sm bg-white px-2 py-1 rounded border">{'{{parent_address}}'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-16 text-xs text-muted-foreground">Phone:</span>
+                <span className="text-sm bg-white px-2 py-1 rounded border">{'{{parent_phone}}'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-16 text-xs text-muted-foreground">Email:</span>
+                <span className="text-sm bg-white px-2 py-1 rounded border">{'{{parent_email}}'}</span>
+              </div>
             </div>
           </div>
         );
 
       case 'tuition-table':
         return (
-          <div style={element.styles}>
-            <h3 style={{ 
-              color: '#2c3e50', 
-              borderBottom: '2px solid #3498db', 
-              paddingBottom: '5px',
-              marginBottom: '15px'
-            }}>
-              {element.content || 'Tuition & Fees'}
-            </h3>
-            
-            <div style={{ 
-              backgroundColor: '#f8f9fa', 
-              padding: '15px', 
-              borderRadius: '5px', 
-              marginBottom: '15px' 
-            }}>
-              <h4 style={{ marginTop: '0', color: '#2c3e50', marginBottom: '10px' }}>
-                Monthly Tuition Rates:
-              </h4>
-              <div style={{ marginBottom: '8px' }}>
-                <strong>Professional Division:</strong> ${'{{professional_fee}}'}
-              </div>
-              <div style={{ marginBottom: '8px' }}>
-                <strong>Pre-Professional Division:</strong> ${'{{pre_pro_fee}}'}
-              </div>
-              <div style={{ marginBottom: '0' }}>
-                <strong>Supplemental Division:</strong> ${'{{supplemental_fee}}'}
-              </div>
+          <div 
+            className="p-4 border-2 border-dashed border-orange-300 rounded-lg bg-orange-50 hover:bg-orange-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">TUITION & FEES</span>
             </div>
-            
-            <div style={{ marginBottom: '10px' }}>
-              <strong>Your Monthly Tuition:</strong> ${'{{monthly_tuition}}'}
-            </div>
-            
-            <div style={{ marginBottom: '10px' }}>
-              Tuition is due on the {'{{payment_due_date}}'} of each month. 
-              Invoices will be sent on the {'{{invoice_send_date}}'} of the previous month.
-            </div>
-            
-            <div>
-              Late payments incur a ${'{{late_fee}}'} fee after {'{{late_grace_period}}'} days grace period.
+            <div className="bg-white rounded-lg p-3 border">
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div className="font-medium">Professional:</div>
+                <div className="text-right">{'{{professional_fee}}'}</div>
+                <div className="font-medium">Pre-Pro:</div>
+                <div className="text-right">{'{{pre_pro_fee}}'}</div>
+                <div className="font-medium">Supplemental:</div>
+                <div className="text-right">{'{{supplemental_fee}}'}</div>
+              </div>
+              <div className="mt-3 pt-2 border-t text-center">
+                <span className="font-semibold">Your Tuition: {'{{monthly_tuition}}'}</span>
+              </div>
             </div>
           </div>
         );
 
       case 'section':
         return (
-          <div style={element.styles}>
-            <h3 style={{ 
-              color: '#2c3e50', 
-              borderBottom: '2px solid #3498db', 
-              paddingBottom: '5px',
-              marginBottom: '15px'
-            }}>
-              {element.settings?.title || 'Policy Section'}
-            </h3>
-            <div dangerouslySetInnerHTML={{ 
-              __html: element.content || '<p>Add your policy content here...</p>' 
-            }} />
+          <div 
+            className="p-4 border-2 border-dashed border-red-300 rounded-lg bg-red-50 hover:bg-red-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">POLICY SECTION</span>
+            </div>
+            <div className="bg-white rounded p-3 border">
+              <h4 className="font-semibold text-sm mb-2 text-foreground">
+                {element.settings?.title || 'Policy Section'}
+              </h4>
+              <div className="text-sm text-muted-foreground line-clamp-3">
+                {element.content ? (
+                  <div dangerouslySetInnerHTML={{ __html: element.content.slice(0, 100) + '...' }} />
+                ) : (
+                  'Click to add policy content...'
+                )}
+              </div>
+            </div>
           </div>
         );
 
       case 'signature':
         return (
-          <div style={{ 
-            marginTop: '40px', 
-            borderTop: '1px solid #bdc3c7', 
-            paddingTop: '20px',
-            ...element.styles 
-          }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              marginBottom: '20px',
-              flexWrap: 'wrap',
-              gap: '20px'
-            }}>
-              <div style={{ minWidth: '250px' }}>
-                <p><strong>Parent/Guardian Signature:</strong></p>
-                <div style={{ 
-                  borderBottom: '1px solid #000', 
-                  height: '40px', 
-                  marginBottom: '10px' 
-                }} />
-                <p>Date: ________________</p>
-              </div>
-              <div style={{ minWidth: '250px' }}>
-                <p><strong>Student Signature (if 18+):</strong></p>
-                <div style={{ 
-                  borderBottom: '1px solid #000', 
-                  height: '40px', 
-                  marginBottom: '10px' 
-                }} />
-                <p>Date: ________________</p>
-              </div>
+          <div 
+            className="p-4 border-2 border-dashed border-indigo-300 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">SIGNATURE BLOCK</span>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <p><strong>Director Signature:</strong></p>
-              <div style={{ 
-                borderBottom: '1px solid #000', 
-                height: '40px', 
-                margin: '10px auto', 
-                width: '300px' 
-              }} />
-              <p>Date: ________________</p>
+            <div className="bg-white rounded p-3 border space-y-3">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-xs text-muted-foreground mb-1">Parent Signature</div>
+                  <div className="h-8 border-b border-gray-400"></div>
+                  <div className="text-xs text-muted-foreground mt-1">Date: ___________</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xs text-muted-foreground mb-1">Student Signature</div>
+                  <div className="h-8 border-b border-gray-400"></div>
+                  <div className="text-xs text-muted-foreground mt-1">Date: ___________</div>
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs text-muted-foreground mb-1">Director Signature</div>
+                <div className="h-8 border-b border-gray-400 max-w-xs mx-auto"></div>
+                <div className="text-xs text-muted-foreground mt-1">Date: ___________</div>
+              </div>
             </div>
           </div>
         );
 
       case 'divider':
         return (
-          <div style={{ 
-            margin: '20px 0',
-            borderBottom: '1px solid #ddd',
-            ...element.styles 
-          }} />
+          <div 
+            className="p-2 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">DIVIDER</span>
+            </div>
+            <div className="h-0.5 bg-gray-300 rounded"></div>
+          </div>
         );
 
       case 'image':
         return (
-          <div style={{ textAlign: 'center', margin: '20px 0', ...element.styles }}>
+          <div 
+            className="p-4 border-2 border-dashed border-pink-300 rounded-lg bg-pink-50 hover:bg-pink-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">IMAGE</span>
+            </div>
             {element.content ? (
               <img 
                 src={element.content} 
                 alt="Contract Image" 
-                style={{ maxWidth: '100%', height: 'auto' }}
+                className="max-w-full h-auto rounded border bg-white"
               />
             ) : (
-              <div style={{ 
-                border: '2px dashed #ddd', 
-                padding: '40px', 
-                borderRadius: '8px',
-                color: '#999'
-              }}>
-                Click to add image
+              <div className="bg-white border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-400">
+                <span className="text-2xl">🖼️</span>
+                <div className="text-sm">Click to add image</div>
               </div>
             )}
           </div>
@@ -214,67 +225,55 @@ export const ContractElementRenderer = ({ element }: ContractElementRendererProp
 
       case 'table':
         return (
-          <div style={element.styles}>
-            <table style={{ 
-              width: '100%', 
-              borderCollapse: 'collapse',
-              margin: '20px 0'
-            }}>
-              <thead>
-                <tr style={{ backgroundColor: '#f8f9fa' }}>
-                  <th style={{ 
-                    border: '1px solid #ddd', 
-                    padding: '12px', 
-                    textAlign: 'left' 
-                  }}>
-                    Column 1
-                  </th>
-                  <th style={{ 
-                    border: '1px solid #ddd', 
-                    padding: '12px', 
-                    textAlign: 'left' 
-                  }}>
-                    Column 2
-                  </th>
-                  <th style={{ 
-                    border: '1px solid #ddd', 
-                    padding: '12px', 
-                    textAlign: 'left' 
-                  }}>
-                    Column 3
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '12px' }}>Data 1</td>
-                  <td style={{ border: '1px solid #ddd', padding: '12px' }}>Data 2</td>
-                  <td style={{ border: '1px solid #ddd', padding: '12px' }}>Data 3</td>
-                </tr>
-                <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '12px' }}>Data 4</td>
-                  <td style={{ border: '1px solid #ddd', padding: '12px' }}>Data 5</td>
-                  <td style={{ border: '1px solid #ddd', padding: '12px' }}>Data 6</td>
-                </tr>
-              </tbody>
-            </table>
+          <div 
+            className="p-4 border-2 border-dashed border-teal-300 rounded-lg bg-teal-50 hover:bg-teal-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">CUSTOM TABLE</span>
+            </div>
+            <div className="bg-white rounded border overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="border border-gray-200 px-3 py-2 text-left">Column 1</th>
+                    <th className="border border-gray-200 px-3 py-2 text-left">Column 2</th>
+                    <th className="border border-gray-200 px-3 py-2 text-left">Column 3</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-200 px-3 py-2">Data 1</td>
+                    <td className="border border-gray-200 px-3 py-2">Data 2</td>
+                    <td className="border border-gray-200 px-3 py-2">Data 3</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-200 px-3 py-2">Data 4</td>
+                    <td className="border border-gray-200 px-3 py-2">Data 5</td>
+                    <td className="border border-gray-200 px-3 py-2">Data 6</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         );
 
       case 'chart':
         return (
-          <div style={{ 
-            textAlign: 'center', 
-            margin: '20px 0', 
-            padding: '40px',
-            border: '2px dashed #ddd',
-            borderRadius: '8px',
-            color: '#999',
-            ...element.styles 
-          }}>
-            📊 Chart Placeholder
-            <br />
-            <small>Charts coming soon</small>
+          <div 
+            className="p-4 border-2 border-dashed border-yellow-300 rounded-lg bg-yellow-50 hover:bg-yellow-100 transition-colors"
+            style={element.styles}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+              <span className="text-xs text-muted-foreground font-medium">CHART</span>
+            </div>
+            <div className="bg-white border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-400">
+              <span className="text-3xl">📊</span>
+              <div className="text-sm mt-2">Chart Component</div>
+              <div className="text-xs text-gray-500">Charts coming soon</div>
+            </div>
           </div>
         );
 

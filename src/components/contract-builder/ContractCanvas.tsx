@@ -94,10 +94,19 @@ export const ContractCanvas = ({
             >
               {elements.length === 0 && (
                 <div className="text-center py-32 text-muted-foreground">
-                  <FileText className="h-16 w-16 mx-auto mb-4 opacity-30" />
-                  <h3 className="text-xl mb-2">Start Building Your Contract</h3>
-                  <p>Drag components from the sidebar to create your contract</p>
-                  <p className="text-sm mt-2">Or use the existing template to get started quickly</p>
+                  <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center">
+                    <FileText className="h-12 w-12 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-3 text-foreground">Ready to Build?</h3>
+                  <p className="text-lg mb-2">Drag elements from the sidebar to start building your contract</p>
+                  <div className="bg-muted/50 rounded-lg p-4 mt-6 max-w-md mx-auto">
+                    <p className="text-sm font-medium mb-2">💡 Quick Start Tips:</p>
+                    <div className="text-sm space-y-1 text-left">
+                      <p>• Load existing template from sidebar</p>
+                      <p>• Drag & drop components to add content</p>
+                      <p>• Click any element to edit it</p>
+                    </div>
+                  </div>
                 </div>
               )}
 
