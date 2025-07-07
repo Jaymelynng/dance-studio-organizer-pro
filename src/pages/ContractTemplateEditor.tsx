@@ -5,9 +5,13 @@ import { EditorHeader } from '@/components/contract-templates/EditorHeader';
 import { EditorInstructions } from '@/components/contract-templates/EditorInstructions';
 import { BasicSettings } from '@/components/contract-templates/BasicSettings';
 import { EditorTabs } from '@/components/contract-templates/EditorTabs';
+import { ContractBuilder } from '@/components/contract-builder/ContractBuilder';
 import { useContractTemplates } from '@/hooks/useContractTemplates';
 import { generateHtmlFromEnglish, parseHtmlToEnglish } from '@/components/contract-templates/utils';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Hammer, FileText } from 'lucide-react';
 
 const ContractTemplateEditor = () => {
   const { id } = useParams();
@@ -15,6 +19,7 @@ const ContractTemplateEditor = () => {
   const { templates, loading, updateTemplate } = useContractTemplates();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
+  const [activeMode, setActiveMode] = useState<'form' | 'builder'>('form');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -132,6 +137,12 @@ const ContractTemplateEditor = () => {
     setFormData(prev => ({ ...prev, ...updates }));
   };
 
+  const handleBuilderSave = (data: { elements: any[]; html: string; formData: any }) => {
+    // Update both the HTML content and form data from the builder
+    setFormData(prev => ({ ...prev, html_content: data.html }));
+    setEnglishFormData(data.formData);
+  };
+
   if (loading || !template) {
     return (
       <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
@@ -157,12 +168,38 @@ const ContractTemplateEditor = () => {
           onChange={handleFormDataChange}
         />
 
-        <EditorTabs
-          englishFormData={englishFormData}
-          htmlContent={formData.html_content}
-          onEnglishFormChange={handleEnglishFormChange}
-          onHtmlChange={(content) => handleFormDataChange({ html_content: content })}
-        />
+        <Tabs value={activeMode} onValueChange={(value) => setActiveMode(value as 'form' | 'builder')}>
+          <TabsList className="grid w-full max-w-md grid-cols-2 mb-6">
+            <TabsTrigger value="form" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Form Editor
+            </TabsTrigger>
+            <TabsTrigger value="builder" className="flex items-center gap-2">
+              <Hammer className="h-4 w-4" />
+              Visual Builder
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="form" className="mt-0">
+            <EditorTabs
+              englishFormData={englishFormData}
+              htmlContent={formData.html_content}
+              onEnglishFormChange={handleEnglishFormChange}
+              onHtmlChange={(content) => handleFormDataChange({ html_content: content })}
+            />
+          </TabsContent>
+          
+          <TabsContent value="builder" className="mt-0">
+            <div className="bg-card border rounded-lg overflow-hidden">
+              <ContractBuilder
+                templateId={id}
+                initialHtml={formData.html_content}
+                initialFormData={englishFormData}
+                onSave={handleBuilderSave}
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
